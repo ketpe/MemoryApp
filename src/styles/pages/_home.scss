@@ -1,0 +1,41 @@
+@use "../abstract/mixins" as mx;
+@use "../abstract/button" as btn;
+@use"../base/typography";
+
+main {
+    position: relative;
+}
+
+.hero {
+    color: white;
+    @include mx.flex-center();
+    gap: 85px;
+
+    &_headers {
+        @include mx.flex-center();
+        align-items: start;
+
+        &-firstline {
+            font-weight: 400;
+            font-size: 48px;
+            font-family: "Almarai Regular";
+        }
+
+        &-secondline {
+            font-family: "Red Rose";
+            font-weight: 700;
+            font-style: bold;
+            font-size: 140px;
+        }
+    }
+
+    &-bg-icon {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+
+        color: #F0EA6E;
+        height: auto;
+        background-image: url(./assets/stadia_controller.svg);
+    }
+}

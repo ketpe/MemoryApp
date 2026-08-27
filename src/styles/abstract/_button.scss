@@ -1,0 +1,52 @@
+@use "./colors" as colors;
+
+.primary_button {
+    display: flex;
+
+    flex-direction: row;
+    background-color: colors.$secondary-yellow;
+    justify-content: space-between;
+    align-items: center;
+    width: 250px;
+    height: 98px;
+    color: colors.$primery-dark;
+    font-size: 40px;
+    font-weight: bold;
+    padding: 24px;
+    cursor: pointer;
+
+
+
+    &:hover {
+        .primary_button--first_icon {
+            transform: rotate(-25.77deg);
+        }
+
+        .primary_button--second_icon {
+            background-image: url("../public/assets/arrow 1-hover.svg");
+            height: 36px;
+        }
+    }
+
+    &--first_icon {
+        width: 44px;
+        height: 32px;
+        background-image: url('../public/assets/stadia_controller-primary-btn.svg');
+        background-repeat: no-repeat;
+        background-position: center;
+
+    }
+
+    &--second_icon {
+        width: 44px;
+        height: 32px;
+        background-image: url('../public/assets/arrow 1.svg');
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    &_bg-icon {
+        background-image: url("..public/assets/stadia_controller.svg");
+    }
+
+}
