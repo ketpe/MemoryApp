@@ -18,21 +18,21 @@
                     <img src="./assets/palette.svg" alt="palette icon" srcset="">
                     <h2 class="settings_radioBtns_headline">Game themes</h2>
                 </div>
-                <form class="settings_radioBtns-theme" action="">
+                <form id="themeForm" class="settings_radioBtns-theme" action="">
                     <div class="radioBtn">
-                        <input type="radio" id="theme1" name="GameTheme" value="cTheme">
+                        <input type="radio" id="theme1" name="selectedTheme" value="cTheme">
                         <label for="theme1">Code vibes Theme</label>
                     </div>
                     <div class="radioBtn">
-                        <input type="radio" id="theme2" name="GameTheme" value="gTheme">
+                        <input type="radio" id="theme2" name="selectedTheme" value="gTheme">
                         <label for="theme2">Gaming Theme</label>
                     </div>
                     <div class="radioBtn">
-                        <input type="radio" id="theme3" name="GameTheme" value="dTheme">
+                        <input type="radio" id="theme3" name="selectedTheme" value="dTheme">
                         <label for="theme3">DA Projects Theme</label>
                     </div>
                     <div class="radioBtn">
-                        <input type="radio" id="theme4" name="GameTheme" value="fTheme">
+                        <input type="radio" id="theme4" name="selectedTheme" value="fTheme">
                         <label for="theme4">Foods theme</label>
                     </div>
                 </form>
@@ -40,13 +40,13 @@
                     <img src="./assets/chess_pawn.svg" alt="palette icon" srcset="">
                     <h2 class="settings_radioBtns_headline">Choose player</h2>
                 </div>
-                <form class="settings_radioBtns-player" action="">
+                <form id="playerForm" class="settings_radioBtns-player" action="">
                     <div class="radioBtn">
-                        <input type="radio" id="pBlue" name="ChosePlayer" value="pBlue">
+                        <input type="radio" id="pBlue" name="selectedPlayer" value="pBlue">
                         <label for="pBlue">Blue</label>
                     </div>
                     <div class="radioBtn">
-                        <input type="radio" id="pOrange" name="ChosePlayer" value="pOrange">
+                        <input type="radio" id="pOrange" name="selectedPlayer" value="pOrange">
                         <label for="pOrange">Orange</label>
                     </div>
                 </form>
@@ -54,17 +54,17 @@
                     <img src="./assets/boadIcon.svg" alt="palette icon" srcset="">
                     <h2 class="settings_radioBtns_headline">Board size</h2>
                 </div>
-                <form class="settings_radioBtns-board" action="">
+                <form id="sizeForm" class="settings_radioBtns-board" action="">
                     <div class="radioBtn">
-                        <input type="radio" id="bSize1" name="ChoseBoardSize" value="bSize1">
+                        <input type="radio" id="bSize1" name="selectedBoardSize" value="bSize1">
                         <label for="bSize1">16 cards</label>
                     </div>
                     <div class="radioBtn">
-                        <input type="radio" id="bSize2" name="ChoseBoardSize" value="bSize2">
+                        <input type="radio" id="bSize2" name="selectedBoardSize" value="bSize2">
                         <label for="bSize2">24 cards</label>
                     </div>
                     <div class="radioBtn">
-                        <input type="radio" id="bSize3" name="ChoseBoardSize" value="bSize3">
+                        <input type="radio" id="bSize3" name="selectedBoardSize" value="bSize3">
                         <label for="bSize3">32 cards</label>
                     </div>
                 </form>

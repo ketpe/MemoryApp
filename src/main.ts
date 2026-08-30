@@ -1,8 +1,8 @@
 import './styles/main.scss';
 
 import startpage from './template/start-page.html?raw';
-// import { settingsPage } from './template/settings-page';
 import settingsPage from './template/settings-page.html?raw';
+import { initSettings } from './modules/settings';
 const CONTENT = document.getElementById("main-container") as HTMLElement;
 
 
@@ -15,13 +15,15 @@ function init(): void {
 };
 
 function loadSettings(): void {
-
-  CONTENT.innerHTML = "";
-  CONTENT.innerHTML += settingsPage;
-  CONTENT.classList = "main-container-settingsPage"
+  render(settingsPage, "main-container-settingsPage");
+  initSettings();
 
 };
 
+function render(template: string, className: string): void {
+  CONTENT.innerHTML = template;
+  CONTENT.className = className;
+}
 
 init();
 
