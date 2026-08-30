@@ -1,5 +1,4 @@
 @use "./_main.scss";
-@use "./abstract/colors" as colors;
 @use "./abstract/mixins" as mx;
 
 body {
@@ -10,6 +9,5 @@ body {
 .main-container {
     width: 100%;
     height: 100%;
-    background-color: colors.$home-background;
     @include mx.flex-center();
 }

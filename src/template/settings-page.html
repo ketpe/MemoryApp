@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+
+<body>
+
+
+    <h1 class="settings_headline">Settings</h1>
+    <div class="main-content-container">
+        <article class="setting_options">
+            <section class="settings_radioBtns">
+                <div class="settings_radioBtns_headContainer">
+                    <img src="./assets/palette.svg" alt="palette icon" srcset="">
+                    <h2 class="settings_radioBtns_headline">Game themes</h2>
+                </div>
+                <form class="settings_radioBtns-theme" action="">
+                    <div class="radioBtn">
+                        <input type="radio" id="theme1" name="GameTheme" value="cTheme">
+                        <label for="theme1">Code vibes Theme</label>
+                    </div>
+                    <div class="radioBtn">
+                        <input type="radio" id="theme2" name="GameTheme" value="gTheme">
+                        <label for="theme2">Gaming Theme</label>
+                    </div>
+                    <div class="radioBtn">
+                        <input type="radio" id="theme3" name="GameTheme" value="dTheme">
+                        <label for="theme3">DA Projects Theme</label>
+                    </div>
+                    <div class="radioBtn">
+                        <input type="radio" id="theme4" name="GameTheme" value="fTheme">
+                        <label for="theme4">Foods theme</label>
+                    </div>
+                </form>
+                <div class="settings_radioBtns_headContainer">
+                    <img src="./assets/chess_pawn.svg" alt="palette icon" srcset="">
+                    <h2 class="settings_radioBtns_headline">Choose player</h2>
+                </div>
+                <form class="settings_radioBtns-player" action="">
+                    <div class="radioBtn">
+                        <input type="radio" id="pBlue" name="ChosePlayer" value="pBlue">
+                        <label for="pBlue">Blue</label>
+                    </div>
+                    <div class="radioBtn">
+                        <input type="radio" id="pOrange" name="ChosePlayer" value="pOrange">
+                        <label for="pOrange">Orange</label>
+                    </div>
+                </form>
+                <div class="settings_radioBtns_headContainer">
+                    <img src="./assets/boadIcon.svg" alt="palette icon" srcset="">
+                    <h2 class="settings_radioBtns_headline">Board size</h2>
+                </div>
+                <form class="settings_radioBtns-board" action="">
+                    <div class="radioBtn">
+                        <input type="radio" id="bSize1" name="ChoseBoardSize" value="bSize1">
+                        <label for="bSize1">16 cards</label>
+                    </div>
+                    <div class="radioBtn">
+                        <input type="radio" id="bSize2" name="ChoseBoardSize" value="bSize2">
+                        <label for="bSize2">24 cards</label>
+                    </div>
+                    <div class="radioBtn">
+                        <input type="radio" id="bSize3" name="ChoseBoardSize" value="bSize3">
+                        <label for="bSize3">32 cards</label>
+                    </div>
+                </form>
+            </section>
+        </article>
+        <article class="setting_preview">
+            <section class="setting_preview-Picture">
+                <img class="setting_preview-Picture-img" src="../assets/preview-itLogo.png" alt="">
+            </section>
+            <section class="setting_preview-board">
+                <span id="preview-theme" class="preview-theme">Game theme</span>
+                <img src="../assets/line6.svg" alt="" srcset="">
+                <span id="preview-player" class="preview-player">Player</span>
+                <img src="../assets/line6.svg" alt="" srcset="">
+                <span id="preview-board" class="preview-board">Board size</span>
+                <button id="game-start-btn" class="small-button" type="submit" disabled>
+                    <img class="small-button-img" src="../assets/smart_display.svg" alt="play button">
+                    <span>Start</span>
+                </button>
+            </section>
+        </article>
+    </div>
+
+
+</body>
+
+</html>
