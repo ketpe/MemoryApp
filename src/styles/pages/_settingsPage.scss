@@ -87,6 +87,10 @@ body {
         &-player {
             @include mx.flex-left;
         }
+
+        &-board {
+            @include mx.flex-left;
+        }
     }
 }
 
