@@ -1,13 +1,66 @@
 // Zentraler Event-Listener für alle Änderungen im Dokument
-import { GameSettings } from "../types/settings.type";
+import { GameSettings, GameTheme, ChoosedPlayer, BoardSize } from "../types/settings.type";
+/**
+ * Hier wird ein Proxhandler für die globalSettings erstellt
+ */
+const settingsHandler: ProxyHandler<any> = {
+    get(target, prop) {
+        const wert = target[prop];
+        if (wert && typeof wert === 'object') {
+            return new Proxy(wert, settingsHandler);
+        }
+        return wert;
+    },
 
-let globalSettings: GameSettings;
+    set(target, prop, value) {
+        target[prop] = value;
+
+        if (!hasAnyNull(globalSettings)) {
+            enableStartBtn();
+        }
+        return true;
+    }
+};
+
+/**
+ *  GlobalSettings wird mit einem Proxy erstellt um diese überwachen zu können.
+ */
+
+export let globalSettings: GameSettings = new Proxy({
+    theme: { selectedTheme: 'cTheme' },
+    player: { selectedPlayer: null },
+    board: { selectedBoardSize: null }
+}, settingsHandler)
+
+/**
+ * schaltet den Btn für den Spielbeginn frei
+ */
+function enableStartBtn(): void {
+    const startBtn = document.getElementById('game-start-btn') as HTMLButtonElement
+    startBtn.disabled = false;
+}
+
+/**
+ * Hilfsfunktion zur Überprüfung für Proxy ob in dem Object noch eine null ist. Prüft auch verschachtelte objecte
+ */
+function hasAnyNull(obj: any): boolean {
+    for (const key in obj) {
+        if (obj[key] === null) {
+            return true;
+        }
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+            if (hasAnyNull(obj[key])) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 /**
  * Initialisiert Eventlistner für das ganze dokument, prüft ob es ein RadioBtn ist und leitet dann zur unterscheidung weiter
  */
 export function initSettings(): void {
-
     document.addEventListener('change', (event: Event) => {
         const target = event.target as HTMLInputElement;
         if (target && target.type === 'radio') {
@@ -29,11 +82,14 @@ function processInput(name: string, value: string, label?: string): void {
     switch (name) {
         case 'selectedTheme':
             adjustTheme(value, label);
+            globalSettings.theme.selectedTheme = value as GameTheme;
             break;
         case 'selectedPlayer':
             adjustPlayer(value, label);
+            globalSettings.player.selectedPlayer = value as ChoosedPlayer;
             break;
         case 'selectedBoardSize':
+            globalSettings.board.selectedBoardSize = value as BoardSize;
             adjustBoard(value, label);
             break;
     }
@@ -43,7 +99,6 @@ function processInput(name: string, value: string, label?: string): void {
 function adjustTheme(value: string, label?: string) {
     const previewThemeText = document.getElementById('preview-theme');
     const previewThemeImg = document.getElementById('setting_preview-Picture-img') as HTMLImageElement;
-    globalSettings
     if (previewThemeText) {
         previewThemeText.innerHTML = label ?? '';
     }
@@ -59,9 +114,10 @@ function adjustPlayer(value: string, label?: string) {
     }
 }
 
-function adjustBoard(wert: string, label?: string) {
+function adjustBoard(value: string, label?: string) {
     const previewBoardText = document.getElementById('preview-board');
     if (previewBoardText) {
         previewBoardText.innerHTML = label ?? '';
     }
 }
+
