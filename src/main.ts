@@ -3,7 +3,7 @@ import './styles/main.scss';
 import startpage from './template/start-page.html?raw';
 import settingsPage from './template/settings-page.html?raw';
 import { initSettings } from './modules/settings';
-const CONTENT = document.getElementById("main-container") as HTMLElement;
+export const CONTENT = document.getElementById("main-container") as HTMLElement;
 
 
 function init(): void {
@@ -20,7 +20,7 @@ function loadSettings(): void {
 
 };
 
-function render(template: string, className: string): void {
+export function render(template: string, className: string): void {
   CONTENT.innerHTML = template;
   CONTENT.className = className;
 }

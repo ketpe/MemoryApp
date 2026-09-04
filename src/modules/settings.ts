@@ -1,19 +1,21 @@
 // Zentraler Event-Listener für alle Änderungen im Dokument
 import { GameSettings, GameTheme, ChoosedPlayer, BoardSize } from "../types/settings.type";
+import { Game } from '../modules/game.module'
+
 /**
  * Hier wird ein Proxhandler für die globalSettings erstellt
  */
 const settingsHandler: ProxyHandler<any> = {
     get(target, prop) {
-        const wert = target[prop];
-        if (wert && typeof wert === 'object') {
-            return new Proxy(wert, settingsHandler);
+        const VALUE = target[prop];
+        if (VALUE && typeof VALUE === 'object') {
+            return new Proxy(VALUE, settingsHandler);
         }
-        return wert;
+        return VALUE;
     },
 
-    set(target, prop, value) {
-        target[prop] = value;
+    set(target, prop, VALUE) {
+        target[prop] = VALUE;
 
         if (!hasAnyNull(globalSettings)) {
             enableStartBtn();
@@ -38,6 +40,11 @@ export let globalSettings: GameSettings = new Proxy({
 function enableStartBtn(): void {
     const startBtn = document.getElementById('game-start-btn') as HTMLButtonElement
     startBtn.disabled = false;
+    addEventListener('click', startGame)
+}
+function startGame(): void {
+    const GAME = new Game(globalSettings);
+
 }
 
 /**
@@ -63,6 +70,8 @@ function hasAnyNull(obj: any): boolean {
 export function initSettings(): void {
     document.addEventListener('change', (event: Event) => {
         const target = event.target as HTMLInputElement;
+        console.log(target);
+
         if (target && target.type === 'radio') {
             const settingName = target.name;
             const selectedValue = target.value;

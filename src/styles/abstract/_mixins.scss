@@ -1,3 +1,5 @@
+@use '../base/typography';
+
 @mixin flex-center($direction: column) {
     display: flex;
     justify-content: center;
@@ -24,4 +26,18 @@
     justify-content: space-between;
     align-items: center;
     flex-direction: $direction;
+}
+
+@mixin redRose-bold($size) {
+    font-family: Red Rose;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: $size;
+}
+
+@mixin redRose-regular($size) {
+    font-family: Red Rose;
+    font-weight: 400;
+    font-style: regular;
+    font-size: $size;
 }
