@@ -2,10 +2,12 @@
 @use "../abstract/button" as btn;
 @use "../abstract/mixins" as mx;
 @use"../base/typography";
+@use"../themes/theme" as *;
 
+@include theme-generator($themes);
 
 .main-container-game {
-    background-color: colors.$home-background ;
+    background-color: t(bg-color);
     width: 100%;
     height: 100%;
     padding: 41px 112px;
@@ -13,22 +15,42 @@
 
 .game_header {
     @include mx.flex-spaceBetween;
-    padding-top: 41px;
+    padding: 41px;
     gap: 54px;
+    background-color: t(bg-game_header-color);
 }
 
 .game_header_left {
     @include mx.redRose-bold(24px);
     @include mx.flex-center(row);
     gap: 20px;
-    background-color: colors.$player-score-bg;
+    background-color: t(bg-header-left-color);
     padding: 17px 20px;
+    border-radius: t(bg-header-left-radius);
+
 
 
     &_score-Blue {
         color: colors.$player-blue;
         @include mx.flex-center(row);
         gap: 4px;
+
+    }
+
+
+    .score_color-blue {
+        display: inline-block;
+        padding-left: 28px;
+        @include mx.bg-image(t(score-icon-blue-url), 20px, 28px);
+        text-indent: t(score-text-visibility);
+    }
+
+    .score_color-orange {
+        display: inline-block;
+        padding-left: 28px;
+        @include mx.bg-image(t(score-icon-blue-url), 20px, 28px);
+        text-indent: t(score-text-visibility);
+
     }
 
     &_score-Orange {
@@ -37,21 +59,92 @@
         gap: 4px;
     }
 
-    .score-icon {
-        img {
-            width: 24px;
-            height: 20px;
-            // @include mx.flex-center(column);
 
+}
+
+.game_header_center {
+    @include mx.flex-center(row);
+    gap: 8px;
+
+    &_text {
+        @include mx.redRose-regular(26px);
+        color: white;
+
+    }
+}
+
+.game_header_right {
+    @include mx.flex-center;
+    padding: 16px 30px 16px 24px;
+
+}
+
+.game_cards {
+    padding-top: 54px;
+    @include mx.flex-center;
+}
+
+.secondary-btn {
+    border-width: 2px;
+    border-style: solid;
+    border-color: t(secBtn-border-color-theme);
+    background-color: t(bg-header-left-color);
+
+    span {
+        position: relative;
+        padding-left: 40px;
+
+        &::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            @include mx.bg-image(t(secBtn-url-theme), 30px, 30px);
         }
     }
 }
 
-.game_header_center {
-    &_text {
-        @include mx.redRose-regular(26px);
-        color: white;
+.secondary-btn:hover {
+    border-width: 3px;
+    border-style: solid;
+    border-color: t(secBtn-border-color-theme-hover);
+    box-shadow: 4px 4px 4px 0px t(border-shadow-color-gtheme);
+    box-shadow: 4px 4px 4px 0px t(secBtn-border-shadow);
+
+    span::before {
+        filter: t(secBtn-url-filter);
+        border-color: t(secBtn-border-color-theme);
+        box-shadow: 4px 4px 4px 0px t(border-shadow-color-gtheme);
     }
 }
 
-.game_header_right {}
+// .secondary-btn {
+//     span {
+//         display: inline-block;
+//         padding-left: 40px;
+//         -webkit-mask: t(secBtn-url-theme) no-repeat left center;
+//         mask: t(secBtn-url-theme) no-repeat left center;
+//
+
+//     }
+
+
+//     background-color: t(secBtn-bg-color);
+//     border-width: 2px;
+//     border-style: solid;
+//     border-color: t(secBtn-border-color-theme);
+//     border-radius: 10px;
+//     color: white;
+// }
+
+// .secondary-btn:hover {
+//     border-color: t(secBtn-border-color-theme);
+//     box-shadow: 4px 4px 4px 0px t(border-shadow-color-gtheme);
+
+//     span {
+//         @include mx.bg-image(t(secBtn-url-theme), 30px, 30px, t(secBtn-url-filter));
+//         // kein color: white hier einfügen!
+//     }
+// }

@@ -1,0 +1,81 @@
+@use "../abstract/colors" as colors;
+
+$themes: (
+    "cTheme": ("bg-color": colors.$home-background,
+        "bg-header": "",
+        "bg-header-left-color": colors.$bg-player-score-ctheme,
+        "game_header-padding": 41px 0 0 0,
+        "bg-game_header-color": "",
+        "bg-header-left-radius": 0,
+        "secBtn-bg-color":colors.$bg-player-score-ctheme,
+        "secBtn-border-color-theme": colors.$border-color-ctheme,
+        "secBtn-border-color-theme-hover":colors.$secondary-yellow, "secBtn-border-shadow": colors.$border-shadow-color-gtheme,
+        "secBtn-url-theme": "url(../public/assets/exitIcon.svg)",
+        "secBtn-url-filter":"",
+        "score-icon-blue-url": "url(../public/assets/labelBlueCtheme.svg)",
+        "score-icon-orange-url": "url(../public/assets/labelOrangeCtheme.svg)",
+        "score-text-visibility": 0,
+    ),
+    "gTheme":("bg-color": colors.$bg-gtheme,
+        "bg-header": colors.$bg-header-gtheme,
+        "bg-header-left-color": white,
+        "bg-game_header-padding": 24px,
+        "bg-game_header-color": colors.$bg-header-gtheme,
+        "bg-header-left-radius": 10px,
+        "secBtn-bg-color":colors.$secondary-btn-bg-gtheme,
+        "secBtn-border-color-theme": colors.$border-color-gtheme,
+        "secBtn-border-shadow": colors.$border-shadow-color-gtheme,
+        "secBtn-url-theme": "url(../public/assets/exitIcon.svg)",
+        "secBtn-url-filter":colors.$filter-bg-img-gtheme,
+        "score-icon-blue-url": "url(../public/assets/chess_pawnBlueGtheme.svg)",
+        "score-icon-orange-url": "url(../public/assets/chess_pawnOrangeGtheme.svg)",
+        "score-text-visibility": -9999px,
+    ),
+    "dTheme":("bg-color": colors.$bg-gtheme,
+        "bg-header": colors.$bg-header-gtheme,
+        "bg-header-left-color": white,
+        "bg-game_header-padding": 24px,
+        "bg-game_header-color": colors.$bg-header-gtheme,
+        "bg-header-left-radius": 10px,
+        "secBtn-bg-color":colors.$secondary-btn-bg-gtheme,
+        "secBtn-border-color-theme": colors.$border-color-gtheme,
+        "secBtn-border-shadow": colors.$border-shadow-color-gtheme,
+        "secBtn-url-theme": "url(../public/assets/exitIcon.svg)",
+        "secBtn-url-filter":colors.$filter-bg-img-gtheme,
+        "score-icon-blue-url": "url(../public/assets/chess_pawnBlueGtheme.svg)",
+        "score-icon-orange-url": "url(../public/assets/chess_pawnOrangeGtheme.svg)",
+        "score-text-visibility": -9999px,
+    ),
+    "fTheme":("bg-color": colors.$bg-gtheme,
+        "bg-header": colors.$bg-header-gtheme,
+        "bg-header-left-color": white,
+        "bg-game_header-padding": 24px,
+        "bg-game_header-color": colors.$bg-header-gtheme,
+        "bg-header-left-radius": 10px,
+        "secBtn-bg-color":colors.$secondary-btn-bg-gtheme,
+        "secBtn-border-color-theme": colors.$border-color-gtheme,
+        "secBtn-border-shadow": colors.$border-shadow-color-gtheme,
+        "secBtn-url-theme": "url(../public/assets/exitIcon.svg)",
+        "secBtn-url-filter":colors.$filter-bg-img-gtheme,
+        "score-icon-blue-url": "url(../public/assets/chess_pawnBlueGtheme.svg)",
+        "score-icon-orange-url": "url(../public/assets/chess_pawnOrangeGtheme.svg)",
+        "score-text-visibility": -9999px,
+    )
+);
+
+
+@mixin theme-generator($themes) {
+    @each $theme-name, $map in $themes {
+
+        // Wir setzen das Attribut direkt auf den Host oder Body
+        [data-theme="#{$theme-name}"] {
+            @each $key, $value in $map {
+                --#{$key}: #{$value}; // Definiert CSS Variablen
+            }
+        }
+    }
+}
+
+@function t($key) {
+    @return var(--#{$key});
+}

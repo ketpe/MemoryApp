@@ -1,8 +1,10 @@
 .card {
-    height: 100px;
+    height: 120px;
+    width: 120px;
     aspect-ratio: 1/1;
     background-color: transparent;
     border: none;
+    cursor: pointer;
 
     &__inner {
         position: relative;
@@ -15,7 +17,9 @@
     &__face {
         position: absolute;
         inset: 0;
-        background-color: black;
+        background-image: url(../public/assets/cards/cthemeCard1.png);
+        background-size: contain;
+        background-repeat: no-repeat;
         backface-visibility: hidden;
 
         &--back {

@@ -4,33 +4,35 @@
         <header class="game_header">
             <section class="game_header_left">
                 <div class="game_header_left_score-Blue">
-                    <span class="score-icon">
-                        <img src="../public/assets/labelBlue.svg" alt="" srcset="">
-                    </span>
-                    <span class="Score_color-blue">Blue</span>
+                    <span class="score_color-blue">Blue</span>
                     <span id="blueScore" class="score">0</span>
                 </div>
                 <div class="game_header_left_score-Orange">
-                    <span class="score-icon">
-                        <img src="../public/assets/labelOrange.svg" alt="" srcset="">
-                    </span>
-                    <span class="Score_color-orange">Orange</span>
-                    <span id="blueScore" class="score">6</span>
+                    <span class="score_color-orange">Orange</span>
+                    <span id="orangeScore" class="score">6</span>
                 </div>
             </section>
             <section class="game_header_center">
                 <span class="game_header_center_text">
-                    Current player
+                    Current player:
                 </span>
-                <img id="currentPlayer-icon" src="../public/assets/labelBlue.svg" alt="" srcset="">
+                <img id="currentPlayer-icon" src="../public/assets/labelBlueCtheme.svg" alt="" srcset="">
             </section>
             <section class="game_header_right">
                 <button class="secondary-btn" type="submit">
-                    <img src="../public/assets/exitIcon.svg" alt="" srcset="">
+
                     <span>Exit Game</span>
                 </button>
             </section>
         </header>
+        <section id="game_cards" class="game_cards">
+            <button aria-label="card-btn" id="card" class="card">
+                <div class="card__inner">
+                    <div class="card__face"></div>
+                    <div class="card__face card__face--back"></div>
+                </div>
+            </button>
+        </section>
     </main>
     <script type="module" src="/src/main.ts"> </script>
 </body>

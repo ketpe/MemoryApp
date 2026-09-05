@@ -1,6 +1,8 @@
 @use "./colors" as colors;
 @use "./mixins" as mx;
 @use "../base/_typography";
+@use "../themes/theme";
+
 
 * {
     box-sizing: border-box;
@@ -164,8 +166,8 @@
     content: "";
     display: inline-block;
     width: 41px;
-    height: 20px; // Höhe anpassen
-    margin-left: 10px; // Der gewünschte 10px
+    height: 20px;
+    margin-left: 10px;
     background-image: url("../assets/line1.svg");
     background-repeat: no-repeat;
     background-size: contain;
@@ -176,19 +178,11 @@
 .secondary-btn {
     width: 207px;
     height: 62px;
-    background-color: colors.$secondary-btn-bg;
     @include mx.flex-center(row);
     gap: 10px;
     padding: 16px 24px;
-    border: 1px solid #F0EA6E;
     box-sizing: border-box;
     transition: box-shadow 0.2s ease-out, border-color 0.2s ease-out;
-
-
-    img {
-        width: 30px;
-        height: 30px;
-    }
 
     span {
         color: white;
@@ -199,10 +193,6 @@
 
 .secondary-btn:hover {
     box-sizing: border-box;
-    border: 3px solid #F0EA6E;
-    box-shadow: 4px 4px 4px 0px #F0EA6E33;
-
-
-
+    border: 3px solid;
 
 }

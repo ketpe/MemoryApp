@@ -1,9 +1,19 @@
 $home-background: #303131;
-$secondary-btn-bg: #F0EA6E1A;
+$secondary-btn-bg-ctheme: #F0EA6E1A;
+$secondary-btn-bg-gtheme: #ED1B7614;
 $secondary-yellow: #F0EA6E;
+$bg-gtheme: #294F60;
+$bg-header-gtheme: #FD96C933;
+$border-color-gtheme: #E71C4F;
+$border-color-ctheme: #4DD5BC;
+$border-shadow-color-gtheme: #F0EA6E33;
 $disabeld-gray: #DBDBD6;
 $disabeld-text: #A3A1A1;
 $preview-gray: #F6F6F6;
 $player-blue: #2BB1FF;
 $player-orange: #F58E39;
-$player-score-bg: #86E9D633;
+$bg-player-score-ctheme: #86E9D633;
+
+
+
+$filter-bg-img-gtheme: brightness(0) saturate(100%) invert(20%) sepia(91%) saturate(5496%) hue-rotate(338deg) brightness(91%) contrast(92%);

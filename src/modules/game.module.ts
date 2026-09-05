@@ -16,7 +16,9 @@ export class Game {
 
     initGame() {
         render(gamepage, 'main-container-game');
-        console.log(CONTENT);
+        if (!this.CONTENT) return
+        this.CONTENT.setAttribute('data-theme', this.globalSettings.theme.selectedTheme as string);
+        this.CONTENT.setAttribute('data-boardSize', this.globalSettings.board.selectedBoardSize as string);
 
     }
 
