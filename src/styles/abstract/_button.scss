@@ -176,8 +176,6 @@
 }
 
 .secondary-btn {
-    width: 207px;
-    height: 62px;
     @include mx.flex-center(row);
     gap: 10px;
     padding: 16px 24px;
@@ -186,13 +184,10 @@
 
     span {
         color: white;
-        @include mx.redRose-bold(24px);
         white-space: nowrap;
     }
 }
 
 .secondary-btn:hover {
     box-sizing: border-box;
-    border: 3px solid;
-
 }
