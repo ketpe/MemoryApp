@@ -1,7 +1,7 @@
 @use "./colors" as colors;
 @use "./mixins" as mx;
 @use "../base/_typography";
-@use "../themes/theme";
+@use "../themes/theme" as *;
 
 
 * {
@@ -177,17 +177,54 @@
 
 .secondary-btn {
     @include mx.flex-center(row);
+    width: t(secBtn-width);
+    height: t(secBtn-height);
+    border-width: 1px;
+    border-style: solid;
+    border-color: t(secBtn-border-color-theme);
+    border-radius: 10px;
+    background-color: t(secBtn-bg-color);
+    border-image: t(border-image) 3 stretch;
     gap: 10px;
-    padding: 16px 24px;
+    padding: t(secBtn-padding);
     box-sizing: border-box;
     transition: box-shadow 0.2s ease-out, border-color 0.2s ease-out;
 
     span {
         color: white;
         white-space: nowrap;
+        @include mx.flex-center(row);
+        color: t(secBtn-text-color);
+        @include mx.font(t(game_header-fontfamily), t(game_header-right-fontweight), t(game_header-right-fontstyle), t(game_header-right-fontsize));
+
+        &::before {
+            filter: t(secBtn-url-filter);
+            content: "";
+            width: 30px;
+            height: 30px;
+            @include mx.bg-image(t(secBtn-url-theme), t(secBtn-bgi-width), t(secBtn-bgi-height));
+            padding: 3.75px 3.75px 3.75px 3.75px;
+        }
+
     }
 }
 
 .secondary-btn:hover {
     box-sizing: border-box;
+    outline: 3px solid t(secBtn-border-color-theme-hover);
+    border-style: solid;
+    border-color: t(secBtn-border-color-theme-hover);
+    box-shadow: t(secBtn-drop-shadow);
+    background-color: t(secBtn-bg-color-hover);
+
+    span {
+        color: t(secBtn-text-color-hover);
+    }
+
+    span::before {
+        filter: t(secBtn-url-filter-hover);
+        border-color: t(secBtn-border-color-theme-hover);
+        box-shadow: t(secBtn-drop-shadow);
+
+    }
 }
