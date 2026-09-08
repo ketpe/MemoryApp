@@ -24,6 +24,11 @@ export function render(template: string, className: string): void {
   CONTENT.innerHTML = template;
   CONTENT.className = className;
 }
+export function renderCard(template: string, id: string): void {
+  let card = document.getElementById(id) as HTMLElement;
+  card.innerHTML = template;
+
+}
 
 init();
 
