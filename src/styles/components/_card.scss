@@ -1,6 +1,8 @@
 .card {
     height: 120px;
     width: 120px;
+    box-sizing: border-box;
+    padding: 0;
     aspect-ratio: 1/1;
     background-color: transparent;
     border: none;
@@ -17,12 +19,13 @@
     &__face {
         position: absolute;
         inset: 0;
-        background-image: url(../public/assets/cards/cthemeCard1.png);
+        background-image: "";
         background-size: contain;
         background-repeat: no-repeat;
         backface-visibility: hidden;
 
         &--back {
+            background-image: "";
             transform: rotateY(180deg);
             background-color: red;
         }

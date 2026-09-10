@@ -24,10 +24,11 @@ export function render(template: string, className: string): void {
   CONTENT.innerHTML = template;
   CONTENT.className = className;
 }
-export function renderCard(template: string, id: string): void {
+export function renderCard(template: string, id: string, BOARD_SIZE: number): void {
   let card = document.getElementById(id) as HTMLElement;
   card.innerHTML = template;
-
+  let size = BOARD_SIZE / 4;
+  card.style.setProperty('--Board-Size', String(size));
 }
 
 init();

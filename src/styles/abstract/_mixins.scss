@@ -29,6 +29,18 @@
     flex-direction: $direction;
 }
 
+@mixin grid($size) {
+    display: grid;
+    width: 100%;
+    place-content: center;
+    grid-template-columns: repeat(var($size), 120px);
+    // grid-template-rows: repeat(var($size), 120px);
+    grid-auto-rows: 120px;
+    gap: 16px;
+    justify-items: center;
+
+}
+
 @mixin redRose-bold($size) {
     font-family: Red Rose;
     font-weight: 700;
@@ -43,17 +55,17 @@
     font-size: $size;
 }
 
+@mixin font($family, $weight, $style, $size) {
+    font-family: $family;
+    font-weight: $weight;
+    font-style: $style ;
+    font-size: $size;
+}
+
 @mixin bg-image($url, $width, $height, $filter: "") {
     background-image: $url;
     background-repeat: no-repeat;
     background-size: $width $height;
     background-position: left center;
     filter: $filter;
-}
-
-@mixin font($family, $weight, $style, $size) {
-    font-family: $family;
-    font-weight: $weight;
-    font-style: $style ;
-    font-size: $size;
 }
