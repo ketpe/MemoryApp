@@ -24,35 +24,43 @@ export class Game {
         this.initGame()
     }
 
+    /**
+     * Initialisiert das Spiel, setzt die Attribute fürs HTML und startet das erstellen des Decks.
+     * @returns
+     */
     initGame() {
         // this.state.cards = this.generateCards();
-        // this.shuffleCards();
-
         render(gamepage, 'main-container-game');
         if (!this.CONTENT) return
         this.CONTENT.setAttribute('data-theme', this.globalSettings.theme.selectedTheme as string);
         this.CONTENT.setAttribute('data-boardSize', this.globalSettings.board.selectedBoardSize as string);
         this.createDeck();
+
     }
-
-
-    private shuffleCards(): void {
-        // Fisher-Yates Algorithmus
-    }
-
+    /**
+     * Wird noch noch nicht verwendet!
+     * @param cardId
+     * @returns
+     */
     public handleCardClick(cardId: number) {
         if (this.state.isLocked) return;
         // Logik für flipCard und checkMatch
     }
-
+    /**
+     * macht aus den strings der Boardgröße nummern
+     * @returns
+     */
     private loadBoardSize() {
         const board_Size = this.globalSettings.board.selectedBoardSize === 'bSize1' ? 16 : this.globalSettings.board.selectedBoardSize === 'bSize2' ? 24 : this.globalSettings.board.selectedBoardSize === 'bSize3' ? 36 : 0;
         return board_Size;
     }
-
+    /**
+     * Erstellt das Spieldeck.Theme,Boardgröße und Karten mit EventListner werden bereitgestellt
+     * @returns
+     */
     private createDeck() {
         const THEME: GameTheme = this.loadTheme();
-        const BOARD_SIZE = this.loadBoardSize();
+        const BOARD_SIZE: number = this.loadBoardSize();
         if (!THEME || !BOARD_SIZE) return;
         const CARDS = this.createCardArray(THEME, BOARD_SIZE)
         const BOARD_CARDES = CARDS.map(el => this.creatCardHTML(el, THEME)).join('')
@@ -60,7 +68,9 @@ export class Game {
         renderCard(BOARD_CARDES, 'game_cards', BOARD_SIZE);
         this.addEventlistnerforCards();
     }
-
+    /**
+     * Fügt jeder KArte einen Eventlistner hinzu und dreht die Karte bei anklicken um
+     */
     private addEventlistnerforCards() {
         const GAME_CARDS = document.getElementById("game_cards")
         if (GAME_CARDS) {
@@ -73,8 +83,9 @@ export class Game {
         }
     }
 
-
-
+    /**
+     * HTML-Template zur erstellung der Karten
+     */
     private creatCardHTML(element: Card, THEME: string) {
         return `<button aria-label="card-btn" id="${element.id}" class="card">
     <div class="card__inner">
@@ -83,13 +94,21 @@ export class Game {
     </div>
 </button>`
     }
-
+    /**
+     * Lädt das ausgewälte Theme
+     * @returns
+     */
     private loadTheme() {
         let theme: GameTheme = this.globalSettings.theme.selectedTheme;
         return theme;
 
     };
-
+    /**
+     * Erstellt ein Array mit Objekten der Karten in Menge der Boardsize, Jede KArte wird doppelt mit eigener ID erstellt. Das Array wird gemischt zurück gegeben
+     * @param THEME
+     * @param BOARD_SIZE
+     * @returns
+     */
     private createCardArray(THEME: string, BOARD_SIZE: number): Card[] {
         const CARDS_ARRAY: Card[] = [];
         for (let i = 2; i <= BOARD_SIZE / 2 + 1; i++) {
@@ -100,6 +119,22 @@ export class Game {
             }
             CARDS_ARRAY.push({ ...CARD_BASE, id: i * 10 + 1 });
             CARDS_ARRAY.push({ ...CARD_BASE, id: i * 10 + 2 });
+        }
+        console.log(CARDS_ARRAY);
+        this.shuffleCards(CARDS_ARRAY);
+        console.log(CARDS_ARRAY);
+
+        return CARDS_ARRAY;
+    }
+    /**
+     * Sortiert das CARDS_ARRY random mit hilfe der Fisher-yates Schleife
+     * @param CARDS_ARRAY
+     * @returns
+     */
+    private shuffleCards(CARDS_ARRAY: Array<object>): Array<object> {
+        for (let i = CARDS_ARRAY.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [CARDS_ARRAY[i], CARDS_ARRAY[j]] = [CARDS_ARRAY[j], CARDS_ARRAY[i]];
         }
         return CARDS_ARRAY;
     }
