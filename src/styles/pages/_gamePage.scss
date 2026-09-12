@@ -12,6 +12,8 @@
     height: 100%;
     padding: 41px 112px;
     text-align: center;
+    @include mx.flex-center(column);
+
 }
 
 .game_header {
@@ -79,5 +81,9 @@
 .game_cards {
     padding-top: 54px;
     // @include mx.flex-center;
-    @include mx.grid(--Board-Size);
+    width: max-content;
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px
 }

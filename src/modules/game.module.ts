@@ -55,12 +55,25 @@ export class Game {
         const BOARD_SIZE = this.loadBoardSize();
         if (!THEME || !BOARD_SIZE) return;
         const CARDS = this.createCardArray(THEME, BOARD_SIZE)
-        console.log(CARDS);
         const BOARD_CARDES = CARDS.map(el => this.creatCardHTML(el, THEME)).join('')
-        console.log(BOARD_CARDES);
         if (!BOARD_CARDES) return;
-        renderCard(BOARD_CARDES, 'game_cards', BOARD_SIZE)
+        renderCard(BOARD_CARDES, 'game_cards', BOARD_SIZE);
+        this.addEventlistnerforCards();
     }
+
+    private addEventlistnerforCards() {
+        const GAME_CARDS = document.getElementById("game_cards")
+        if (GAME_CARDS) {
+            GAME_CARDS.addEventListener('click', e => {
+                const CARD = (e.target as HTMLElement).closest(".card") as HTMLButtonElement
+                if (CARD) {
+                    CARD.classList.toggle("is-flipped");
+                }
+            })
+        }
+    }
+
+
 
     private creatCardHTML(element: Card, THEME: string) {
         return `<button aria-label="card-btn" id="${element.id}" class="card">

@@ -40,7 +40,7 @@ export let globalSettings: GameSettings = new Proxy({
 function enableStartBtn(): void {
     const startBtn = document.getElementById('game-start-btn') as HTMLButtonElement
     startBtn.disabled = false;
-    addEventListener('click', startGame)
+    startBtn.addEventListener('click', startGame, { once: true });
 }
 function startGame(): void {
     const GAME = new Game(globalSettings);
@@ -70,8 +70,6 @@ function hasAnyNull(obj: any): boolean {
 export function initSettings(): void {
     document.addEventListener('change', (event: Event) => {
         const target = event.target as HTMLInputElement;
-        console.log(target);
-
         if (target && target.type === 'radio') {
             const settingName = target.name;
             const selectedValue = target.value;
