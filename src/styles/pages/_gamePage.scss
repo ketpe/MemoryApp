@@ -72,6 +72,19 @@
         white-space: nowrap;
 
     }
+
+    &_icon {
+        width: 41px;
+        height: 40px;
+        background-color: transparent;
+        border-radius: t(game_header-center-icon-radius);
+        @include mx.flex-center();
+
+        img {
+            width: 25px;
+            height: 32px;
+        }
+    }
 }
 
 .game_header_right {

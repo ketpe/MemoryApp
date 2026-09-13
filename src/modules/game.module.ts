@@ -35,8 +35,40 @@ export class Game {
         this.CONTENT.setAttribute('data-theme', this.globalSettings.theme.selectedTheme as string);
         this.CONTENT.setAttribute('data-boardSize', this.globalSettings.board.selectedBoardSize as string);
         this.createDeck();
+        this.startGame();
 
     }
+    private startGame() {
+        this.setCurrentPlayerStateHTML();
+        this.addEventlistnerforCards();
+    }
+
+    private setCurrentPlayerStateHTML() {
+        this.chooseImgForTheme();
+    };
+
+    private chooseImgForTheme() {
+        const PLAYER_ICON: HTMLElement | null = document.getElementById('currentPlayer-icon-img');
+        if (!PLAYER_ICON) return;
+        this.globalSettings.theme.selectedTheme === 'cTheme' ? this.setCthemePlayerIcon(PLAYER_ICON) : this.setPlayerIcon(PLAYER_ICON)
+    }
+
+    /** lädt bei auswahl des ctheme entweder das blaue oder organge Icon des aktuellen Spielers
+     *
+     */
+    private setCthemePlayerIcon(PLAYER_ICON: HTMLElement) {
+        this.state.currentPlayer === 'pBlue' ? PLAYER_ICON.setAttribute('src', '../public/assets/labelBlueCtheme.svg') : PLAYER_ICON.setAttribute('src', '../public/assets/labelOrangeCtheme.svg');
+    }
+    /** lädt bei auswahl eines anderen Themes wie c , das Icon des aktuellen Spielers und die Baakcgroundcolor des aktuellen spielers
+     *
+     */
+    private setPlayerIcon(PLAYER_ICON: HTMLElement) {
+        const PLAYER_ICON_BG = document.getElementById('game_header_center_icon');
+        if (!PLAYER_ICON_BG) return;
+        PLAYER_ICON.setAttribute('src', '../public/assets/chess_pawnWhite.svg')
+        this.state.currentPlayer === 'pBlue' ? PLAYER_ICON_BG.style.backgroundColor = '#1FAAFC' : PLAYER_ICON_BG.style.backgroundColor = '#F58E39'
+    }
+
     /**
      * Wird noch noch nicht verwendet!
      * @param cardId
@@ -62,11 +94,11 @@ export class Game {
         const THEME: GameTheme = this.loadTheme();
         const BOARD_SIZE: number = this.loadBoardSize();
         if (!THEME || !BOARD_SIZE) return;
-        const CARDS = this.createCardArray(THEME, BOARD_SIZE)
-        const BOARD_CARDES = CARDS.map(el => this.creatCardHTML(el, THEME)).join('')
+        this.state.cards = this.createCardArray(THEME, BOARD_SIZE);
+        const BOARD_CARDES = this.state.cards.map(el => this.creatCardHTML(el, THEME)).join('')
         if (!BOARD_CARDES) return;
         renderCard(BOARD_CARDES, 'game_cards', BOARD_SIZE);
-        this.addEventlistnerforCards();
+
     }
     /**
      * Fügt jeder KArte einen Eventlistner hinzu und dreht die Karte bei anklicken um
@@ -120,10 +152,7 @@ export class Game {
             CARDS_ARRAY.push({ ...CARD_BASE, id: i * 10 + 1 });
             CARDS_ARRAY.push({ ...CARD_BASE, id: i * 10 + 2 });
         }
-        console.log(CARDS_ARRAY);
         this.shuffleCards(CARDS_ARRAY);
-        console.log(CARDS_ARRAY);
-
         return CARDS_ARRAY;
     }
     /**
