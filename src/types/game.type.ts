@@ -9,6 +9,11 @@ export interface Card {
 export interface GameState {
     cards: Card[];
     flippedCards: Card[];
+    matchedCards: Card[];
     currentPlayer: ChoosedPlayer;
     isLocked: boolean;
+    pointsPlayerBlue: number;
+    pointsPlayerOrange: number;
+
 }
+

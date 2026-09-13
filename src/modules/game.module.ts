@@ -4,143 +4,201 @@ import { CONTENT, render, renderCard } from "../main";
 import gamepage from '../template/game-page.html?raw';
 import cards from '../template/cards.html?raw';
 import '../styles/main.scss';
-
+import { createProxy } from "./gameStateProxy";
 
 export class Game {
     private globalSettings: GameSettings;
     CONTENT: HTMLElement;
     private state: GameState;
 
-
     constructor(globalSettings: GameSettings) {
         this.globalSettings = globalSettings;
-        this.state = {
+        this.CONTENT = CONTENT;
+        const RAW_STATE: GameState = {
             cards: [],
             flippedCards: [],
+            matchedCards: [],
             currentPlayer: this.globalSettings.player.selectedPlayer,
-            isLocked: false
+            isLocked: false,
+            pointsPlayerBlue: 0,
+            pointsPlayerOrange: 0
         };
-        this.CONTENT = CONTENT;
-        this.initGame()
+        this.state = createProxy(RAW_STATE, () => this.updateGame());
+        this.initGame();
+    }
+
+    /**
+     * SCHRITT 1: Die Update-Zentrale
+     * Diese Funktion wird jetzt AUTOMATISCH vom Proxy aufgerufen,
+     * sobald sich IRGENDETWAS im State ändert (z.B. currentPlayer wechselt oder Karten ändern sich).
+     */
+    updateGame() {
+        this.setCurrentPlayerStateHTML();
+        // Falls du später das Spielfeld basierend auf Karten-Status neu rendern willst, kommt das auch hier rein.
     }
 
     /**
      * Initialisiert das Spiel, setzt die Attribute fürs HTML und startet das erstellen des Decks.
-     * @returns
      */
     initGame() {
-        // this.state.cards = this.generateCards();
         render(gamepage, 'main-container-game');
-        if (!this.CONTENT) return
+        if (!this.CONTENT) return;
         this.CONTENT.setAttribute('data-theme', this.globalSettings.theme.selectedTheme as string);
         this.CONTENT.setAttribute('data-boardSize', this.globalSettings.board.selectedBoardSize as string);
-        this.createDeck();
-        this.startGame();
-
-    }
-    private startGame() {
         this.setCurrentPlayerStateHTML();
+        this.createDeck();
         this.addEventlistnerforCards();
     }
 
     private setCurrentPlayerStateHTML() {
         this.chooseImgForTheme();
-    };
+        this.setCurrentPoints();
+        this.flippCards();
+    }
 
     private chooseImgForTheme() {
         const PLAYER_ICON: HTMLElement | null = document.getElementById('currentPlayer-icon-img');
         if (!PLAYER_ICON) return;
-        this.globalSettings.theme.selectedTheme === 'cTheme' ? this.setCthemePlayerIcon(PLAYER_ICON) : this.setPlayerIcon(PLAYER_ICON)
+        this.globalSettings.theme.selectedTheme === 'cTheme' ? this.setCthemePlayerIcon(PLAYER_ICON) : this.setPlayerIcon(PLAYER_ICON);
     }
 
-    /** lädt bei auswahl des ctheme entweder das blaue oder organge Icon des aktuellen Spielers
-     *
-     */
     private setCthemePlayerIcon(PLAYER_ICON: HTMLElement) {
-        this.state.currentPlayer === 'pBlue' ? PLAYER_ICON.setAttribute('src', '../public/assets/labelBlueCtheme.svg') : PLAYER_ICON.setAttribute('src', '../public/assets/labelOrangeCtheme.svg');
+        this.state.currentPlayer === 'pBlue'
+            ? PLAYER_ICON.setAttribute('src', '../public/assets/labelBlueCtheme.svg')
+            : PLAYER_ICON.setAttribute('src', '../public/assets/labelOrangeCtheme.svg');
     }
-    /** lädt bei auswahl eines anderen Themes wie c , das Icon des aktuellen Spielers und die Baakcgroundcolor des aktuellen spielers
-     *
-     */
+
     private setPlayerIcon(PLAYER_ICON: HTMLElement) {
         const PLAYER_ICON_BG = document.getElementById('game_header_center_icon');
         if (!PLAYER_ICON_BG) return;
-        PLAYER_ICON.setAttribute('src', '../public/assets/chess_pawnWhite.svg')
-        this.state.currentPlayer === 'pBlue' ? PLAYER_ICON_BG.style.backgroundColor = '#1FAAFC' : PLAYER_ICON_BG.style.backgroundColor = '#F58E39'
+        PLAYER_ICON.setAttribute('src', '../public/assets/chess_pawnWhite.svg');
+        this.state.currentPlayer === 'pBlue'
+            ? PLAYER_ICON_BG.style.backgroundColor = '#1FAAFC'
+            : PLAYER_ICON_BG.style.backgroundColor = '#F58E39';
     }
 
-    /**
-     * Wird noch noch nicht verwendet!
-     * @param cardId
-     * @returns
-     */
+    private setCurrentPoints() {
+        const REF_BLUE_POINTS = document.getElementById('blueScore') as HTMLElement;
+        const REF_ORANGE_POINTS = document.getElementById('orangeScore') as HTMLElement;
+        if (!REF_BLUE_POINTS && !REF_ORANGE_POINTS) return;
+        REF_BLUE_POINTS.innerHTML = this.state.pointsPlayerBlue.toString();
+        REF_ORANGE_POINTS.innerHTML = this.state.pointsPlayerOrange.toString();
+    }
+    private flippCards() {
+        this.state.cards.forEach(
+            card => {
+                const ELEMENT = document.getElementById(String(card.id));
+                if (!ELEMENT) return;
+                if (card.isFlipped === true) {
+                    const CARD = ELEMENT.closest('.card');
+                    if (CARD) {
+                        CARD.classList.add("is-flipped")
+                    }
+                } else {
+                    const CARD = ELEMENT.closest('.card');
+                    if (CARD) {
+                        CARD.classList.remove("is-flipped")
+                    }
+                }
+
+                //  CARD_ELEMENT.classList.toggle("is-flipped");
+            });
+    }
+
+
     public handleCardClick(cardId: number) {
         if (this.state.isLocked) return;
-        // Logik für flipCard und checkMatch
+        const clickedCard = this.state.cards.find(card => card.id === cardId);
+        if (clickedCard && !clickedCard.isFlipped) {
+            clickedCard.isFlipped = true;
+            this.state.flippedCards.push(clickedCard);
+            // Hier kommt später deine restliche Memory-Logik hin (z.B. flippedCards befüllen, vergleichen)
+        }
+        if (this.state.flippedCards.length == 2) {
+            this.state.isLocked = true;
+            this.checkmatch();
+        }
     }
-    /**
-     * macht aus den strings der Boardgröße nummern
-     * @returns
-     */
+
+    private checkmatch() {
+        const CARD1 = this.state.flippedCards[0];
+        const CARD2 = this.state.flippedCards[1];
+        if (CARD1.value === CARD2.value) {
+            this.cardMatch(CARD1, CARD2);
+        } else {
+            this.cardMismatch(CARD1, CARD2);
+            this.togglePlayer();
+        }
+    }
+    private togglePlayer() {
+        this.state.currentPlayer = this.state.currentPlayer === 'pBlue' ? 'pOrange' : 'pBlue';
+    }
+    private cardMatch(CARD1: Card, CARD2: Card) {
+        this.state.matchedCards.push(CARD1, CARD2);
+        this.state.cards.forEach(card => {
+            if (card.id === CARD1.id || card.id === CARD2.id) {
+                card.isMatched = true;
+                this.addPoints();
+            }
+        });
+        this.state.flippedCards.splice(0, 2);
+        this.state.isLocked = false;
+    }
+    private cardMismatch(CARD1: Card, CARD2: Card) {
+        setTimeout(() => {
+            CARD1.isFlipped = false;
+            CARD2.isFlipped = false;
+        }, 1000);
+        this.state.flippedCards.splice(0, 2);
+        this.state.isLocked = false;
+    }
+    private addPoints() {
+        this.state.currentPlayer === "pBlue" ? this.state.pointsPlayerBlue += 1 : this.state.pointsPlayerOrange += 1;
+    }
+
     private loadBoardSize() {
         const board_Size = this.globalSettings.board.selectedBoardSize === 'bSize1' ? 16 : this.globalSettings.board.selectedBoardSize === 'bSize2' ? 24 : this.globalSettings.board.selectedBoardSize === 'bSize3' ? 36 : 0;
         return board_Size;
     }
-    /**
-     * Erstellt das Spieldeck.Theme,Boardgröße und Karten mit EventListner werden bereitgestellt
-     * @returns
-     */
+
     private createDeck() {
         const THEME: GameTheme = this.loadTheme();
         const BOARD_SIZE: number = this.loadBoardSize();
         if (!THEME || !BOARD_SIZE) return;
         this.state.cards = this.createCardArray(THEME, BOARD_SIZE);
-        const BOARD_CARDES = this.state.cards.map(el => this.creatCardHTML(el, THEME)).join('')
+        const BOARD_CARDES = this.state.cards.map(el => this.creatCardHTML(el, THEME)).join('');
         if (!BOARD_CARDES) return;
         renderCard(BOARD_CARDES, 'game_cards', BOARD_SIZE);
-
     }
-    /**
-     * Fügt jeder KArte einen Eventlistner hinzu und dreht die Karte bei anklicken um
-     */
+
+
     private addEventlistnerforCards() {
-        const GAME_CARDS = document.getElementById("game_cards")
+        const GAME_CARDS = document.getElementById("game_cards");
         if (GAME_CARDS) {
             GAME_CARDS.addEventListener('click', e => {
-                const CARD = (e.target as HTMLElement).closest(".card") as HTMLButtonElement
-                if (CARD) {
-                    CARD.classList.toggle("is-flipped");
+                const CARD_ELEMENT = (e.target as HTMLElement).closest(".card") as HTMLButtonElement;
+                if (CARD_ELEMENT) {
+                    const cardId = Number(CARD_ELEMENT.id);
+                    this.handleCardClick(cardId);
                 }
-            })
+            });
         }
     }
 
-    /**
-     * HTML-Template zur erstellung der Karten
-     */
     private creatCardHTML(element: Card, THEME: string) {
         return `<button aria-label="card-btn" id="${element.id}" class="card">
     <div class="card__inner">
         <div class="card__face" style="background-image: url(./assets/cards/${THEME}/${THEME}Card_1.png)"></div>
         <div class="card__face card__face--back" style="background-image: url(${element.value})"></div>
     </div>
-</button>`
+</button>`;
     }
-    /**
-     * Lädt das ausgewälte Theme
-     * @returns
-     */
+
     private loadTheme() {
         let theme: GameTheme = this.globalSettings.theme.selectedTheme;
         return theme;
+    }
 
-    };
-    /**
-     * Erstellt ein Array mit Objekten der Karten in Menge der Boardsize, Jede KArte wird doppelt mit eigener ID erstellt. Das Array wird gemischt zurück gegeben
-     * @param THEME
-     * @param BOARD_SIZE
-     * @returns
-     */
     private createCardArray(THEME: string, BOARD_SIZE: number): Card[] {
         const CARDS_ARRAY: Card[] = [];
         for (let i = 2; i <= BOARD_SIZE / 2 + 1; i++) {
@@ -148,18 +206,14 @@ export class Game {
                 value: `./assets/cards/${THEME}/${THEME}Card_${i}.png`,
                 isFlipped: false,
                 isMatched: false,
-            }
+            };
             CARDS_ARRAY.push({ ...CARD_BASE, id: i * 10 + 1 });
             CARDS_ARRAY.push({ ...CARD_BASE, id: i * 10 + 2 });
         }
         this.shuffleCards(CARDS_ARRAY);
         return CARDS_ARRAY;
     }
-    /**
-     * Sortiert das CARDS_ARRY random mit hilfe der Fisher-yates Schleife
-     * @param CARDS_ARRAY
-     * @returns
-     */
+
     private shuffleCards(CARDS_ARRAY: Array<object>): Array<object> {
         for (let i = CARDS_ARRAY.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -167,13 +221,4 @@ export class Game {
         }
         return CARDS_ARRAY;
     }
-
-    /**
-     * Mit creatDeck beginnen dazu die größe mit checkBoardSize festlegen in ner Variable
-     *
-     * mit loadTheme das Theme auslesen und in die const Theme legen
-     *
-     * dann an hand der Board größe ein array erstellen
-     */
-
 }
