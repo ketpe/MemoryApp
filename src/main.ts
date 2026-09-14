@@ -2,6 +2,7 @@ import './styles/main.scss';
 
 import startpage from './template/start-page.html?raw';
 import settingsPage from './template/settings-page.html?raw';
+import gameoverPage from './template/gameover.html?raw';
 import { initSettings } from './modules/settings';
 export const CONTENT = document.getElementById("main-container") as HTMLElement;
 
@@ -31,7 +32,14 @@ export function renderCard(template: string, id: string, BOARD_SIZE: number): vo
   card.style.setProperty('--Board-Size', String(size));
 }
 
+export function loadGameover(): void {
+  render(gameoverPage, "main-container-gameover");
+
+};
+
 init();
+
+
 
 /*
 init();

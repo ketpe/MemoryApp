@@ -1,6 +1,6 @@
 import { GameSettings, GameTheme } from "../types/settings.type";
 import { Card, GameState } from "../types/game.type";
-import { CONTENT, render, renderCard } from "../main";
+import { CONTENT, render, renderCard, loadGameover } from "../main";
 import gamepage from '../template/game-page.html?raw';
 import cards from '../template/cards.html?raw';
 import '../styles/main.scss';
@@ -112,11 +112,15 @@ export class Game {
         if (clickedCard && !clickedCard.isFlipped) {
             clickedCard.isFlipped = true;
             this.state.flippedCards.push(clickedCard);
-            // Hier kommt später deine restliche Memory-Logik hin (z.B. flippedCards befüllen, vergleichen)
+
         }
         if (this.state.flippedCards.length == 2) {
             this.state.isLocked = true;
             this.checkmatch();
+        }
+        if (this.state.matchedCards.length = this.state.cards.length) {
+            loadGameover();
+
         }
     }
 

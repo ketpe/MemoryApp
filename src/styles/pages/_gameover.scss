@@ -1,0 +1,83 @@
+@use '../abstract/colors' as colors;
+@use "../abstract/button" as btn;
+@use "../abstract/mixins" as mx;
+@use"../base/typography";
+@use"../themes/theme" as *;
+
+@include theme-generator($themes);
+
+//
+
+.main-container-gameover {
+    background-color: t(bg-color);
+    width: 100%;
+    height: 100%;
+    padding: 41px 112px;
+    text-align: center;
+    @include mx.flex-center(column);
+
+}
+
+.game-over-center {
+    @include mx.flex-center(column);
+    font-family: t(game_header-fontfamily);
+
+    &-headline {
+        color: t(color-go-headline);
+        font-size: t(go-headline-fontsize);
+        font-weight: t(go-headline-fontweight);
+        letter-spacing: t(go-headline-fontspacing);
+        text-transform: t(go-headline-transform-text);
+        padding: 0;
+        margin: 0;
+        padding-bottom: 124px;
+    }
+}
+
+.game-over-center-sumary {
+    p {
+        font-size: t(game_header-center-fontsize);
+        color: white;
+        margin-top: 0;
+    }
+}
+
+
+
+.game_header_left {
+    @include mx.font(t(game_header-fontfamily), t(game_header-left-fontweight), t(game_header-left-fontstyle), t(game_header-left-fontsize));
+    @include mx.flex-center(row);
+    gap: 32px;
+    background-color: t(bg-header-left-color);
+    padding: t(bg-game_header-padding);
+    border-radius: t(bg-header-left-radius);
+
+    &_score-Blue {
+        color: colors.$player-blue;
+        @include mx.flex-center(row);
+        gap: 4px;
+    }
+
+    .score_color-blue {
+        display: inline-block;
+        padding-left: 28px;
+        @include mx.bg-image(t(score-icon-blue-url), 20px, 25px);
+        text-indent: t(score-text-visibility);
+    }
+
+    .score_color-orange {
+        display: inline-block;
+        padding-left: 28px;
+        @include mx.bg-image(t(score-icon-orange-url), 20px, 25px);
+        text-indent: t(score-text-visibility);
+
+    }
+
+    &_score-Orange {
+        color: colors.$player-orange;
+        @include mx.flex-center(row);
+        gap: 4px;
+    }
+
+
+}
