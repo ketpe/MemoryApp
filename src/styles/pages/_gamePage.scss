@@ -97,6 +97,6 @@
     width: max-content;
     display: grid;
     place-items: center;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(var(--Board-Size), 1fr);
     gap: 10px
 }
