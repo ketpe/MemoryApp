@@ -1,8 +1,7 @@
 import { GameSettings, GameTheme } from "../types/settings.type";
 import { Card, GameState } from "../types/game.type";
-import { CONTENT, render, renderCard, loadGameover } from "../main";
+import { CONTENT, render, renderCard, loadGameover, loadFinalScreen } from "../main";
 import gamepage from '../template/game-page.html?raw';
-import cards from '../template/cards.html?raw';
 import '../styles/main.scss';
 import { createProxy } from "./gameStateProxy";
 
@@ -100,8 +99,6 @@ export class Game {
                         CARD.classList.remove("is-flipped")
                     }
                 }
-
-                //  CARD_ELEMENT.classList.toggle("is-flipped");
             });
     }
 
@@ -118,8 +115,54 @@ export class Game {
             this.state.isLocked = true;
             this.checkmatch();
         }
-        if (this.state.matchedCards.length = this.state.cards.length) {
+        if (this.state.matchedCards.length == 2) {
+            this.state.isLocked = true;
             loadGameover();
+            this.setCurrentPoints();
+            setTimeout(() => {
+                loadFinalScreen();
+                this.loadAttributesForFinalpage();
+            }, 2500);
+        }
+        // if (this.state.matchedCards.length === this.state.cards.length) {
+        // this.state.isLocked = true;
+        //     loadGameover();
+        //     this.setCurrentPoints();
+        //     setTimeout(() => {
+        //         loadFinalScreen();
+        //         this.loadAttributesForFinalpage();
+        //     }, 2500);
+        // }
+    }
+
+    private loadAttributesForFinalpage() {
+        const matchWinner = (this.state.pointsPlayerBlue > this.state.pointsPlayerOrange) ? 'pBlue' : 'pOrange'
+        const REF_WINNER_ICON = document.getElementById('final-center-img') as HTMLElement;
+        const REF_WINNER_TEXT = document.getElementById('final-center-winnerheadline') as HTMLElement;
+        if (!REF_WINNER_ICON || !REF_WINNER_TEXT) return;
+        REF_WINNER_TEXT.setAttribute('data-winner', matchWinner);
+        this.setAttributesforWinner(matchWinner, REF_WINNER_ICON, REF_WINNER_TEXT);
+        this.setBtnAttributesforBtn();
+    }
+
+    private setAttributesforWinner(matchWinner: string, WINNER_ICON: HTMLElement, WINNER_TEXT: HTMLElement) {
+        if (matchWinner === 'pBlue') {
+            WINNER_ICON.classList = ("final-center-img-blue");
+            WINNER_TEXT.innerHTML = ("Blue Player");
+            WINNER_TEXT.style
+        } else {
+            WINNER_ICON.classList = ("final-center-img-orange");
+            WINNER_TEXT.innerHTML = ("Blue Player");
+        }
+    }
+
+    setBtnAttributesforBtn() {
+        const REF_BACK_BTN = document.getElementById("btn-backToStart");
+        if (!REF_BACK_BTN) return;
+        if (this.globalSettings.theme.selectedTheme === 'cTheme') {
+            REF_BACK_BTN.innerHTML = "Back to Start";
+        } else {
+            REF_BACK_BTN.innerHTML = "Home";
 
         }
     }

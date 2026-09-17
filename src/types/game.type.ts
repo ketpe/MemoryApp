@@ -14,6 +14,5 @@ export interface GameState {
     isLocked: boolean;
     pointsPlayerBlue: number;
     pointsPlayerOrange: number;
-
 }
 
