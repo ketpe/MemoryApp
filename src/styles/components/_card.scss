@@ -1,8 +1,11 @@
 @use "../abstract/mixins" as mx;
+@use"../themes/theme" as *;
+
+@include theme-generator($themes);
 
 .card {
-    height: 120px;
-    width: 120px;
+    width: t(card-width);
+    height: t(card-height);
     box-sizing: border-box;
     padding: 0;
     margin: 0;
@@ -17,8 +20,8 @@
 
     &__inner {
         position: relative;
-        width: 120px;
-        height: 120px;
+        width: t(card-width);
+        height: t(card-height);
         transform-style: preserve-3d;
         transition: all 300ms ease-in-out;
     }
@@ -31,6 +34,9 @@
         background-repeat: no-repeat;
         background-position: center;
         backface-visibility: hidden;
+        border-radius: t(card-border-radius);
+        box-shadow: t(card-drop-shadow);
+        ;
 
         &--back {
             background-image: "";

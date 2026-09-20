@@ -8,6 +8,13 @@
     flex-direction: $direction;
 }
 
+@mixin flex-start-center($direction: column) {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: $direction;
+}
+
 @mixin flex-left($direction: column) {
     display: flex;
     justify-content: center;

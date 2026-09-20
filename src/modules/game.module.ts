@@ -44,9 +44,14 @@ export class Game {
         if (!this.CONTENT) return;
         this.CONTENT.setAttribute('data-theme', this.globalSettings.theme.selectedTheme as string);
         this.CONTENT.setAttribute('data-boardSize', this.globalSettings.board.selectedBoardSize as string);
+        document.getElementById('game_cards')?.setAttribute(
+            'data-boardSize',
+            this.globalSettings.board.selectedBoardSize as string
+        );
         this.setCurrentPlayerStateHTML();
         this.createDeck();
         this.addEventlistnerforCards();
+        this.addEventlistnerforDialog();
     }
 
     private setCurrentPlayerStateHTML() {
@@ -157,7 +162,7 @@ export class Game {
     }
 
     setBtnAttributesforBtn() {
-        const REF_BACK_BTN = document.getElementById("btn-backToStart");
+        const REF_BACK_BTN = document.getElementById("btn-backToStart")?.querySelector('span');
         if (!REF_BACK_BTN) return;
         if (this.globalSettings.theme.selectedTheme === 'cTheme') {
             REF_BACK_BTN.innerHTML = "Back to Start";
@@ -230,6 +235,33 @@ export class Game {
                 }
             });
         }
+    }
+    private addEventlistnerforDialog() {
+        const DIALOG = document.getElementById('exit-dialog') as HTMLDialogElement
+        console.log(DIALOG);
+
+        const OPEN_DIALOG = document.getElementById('btn-exit-dialog') as HTMLButtonElement;
+        console.log(OPEN_DIALOG);
+
+        const CLOSE_DIALOG = document.getElementById('btn-back') as HTMLButtonElement;
+        console.log(CLOSE_DIALOG);
+
+        if (DIALOG && OPEN_DIALOG && CLOSE_DIALOG) {
+
+            OPEN_DIALOG.addEventListener('click', () => this.openDialog(DIALOG))
+            CLOSE_DIALOG.addEventListener('click', () => this.closeDialog(DIALOG))
+        } else {
+            console.log('Fehler');
+
+        };
+    }
+
+    private openDialog(DIALOG: HTMLDialogElement) {
+        DIALOG.showModal();
+    }
+
+    private closeDialog(DIALOG: HTMLDialogElement) {
+        DIALOG.close();
     }
 
     private creatCardHTML(element: Card, THEME: string) {

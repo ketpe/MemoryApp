@@ -177,12 +177,10 @@
 
 .secondary-btn {
     @include mx.flex-center(row);
-    width: t(secBtn-width);
-    height: t(secBtn-height);
     border-width: 1px;
     border-style: solid;
     border-color: t(secBtn-border-color-theme);
-    border-radius: 10px;
+    border-radius: t(secBtn-border-radius);
     background-color: t(secBtn-bg-color);
     border-image: t(border-image) 3 stretch;
     gap: 10px;

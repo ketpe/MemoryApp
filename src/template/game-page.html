@@ -1,35 +1,34 @@
-<body>
-    <main class="main-container-game">
+<header class="game_header">
+    <section class="game_header_left">
+        <div class="game_header_left_score-Blue">
+            <span class="score_color-blue">Blue</span>
+            <span id="blueScore" class="score">0</span>
+        </div>
+        <div class="game_header_left_score-Orange">
+            <span class="score_color-orange">Orange</span>
+            <span id="orangeScore" class="score">6</span>
+        </div>
+    </section>
+    <section class="game_header_center">
+        <span class="game_header_center_text">
+            Current player:
+        </span>
+        <div class="game_header_center_icon" id="game_header_center_icon">
+            <img id="currentPlayer-icon-img" src="../public/assets/labelBlueCtheme.svg" alt="" srcset="">
+        </div>
+    </section>
+    <section class="game_header_right">
+        <button id="btn-exit-dialog" class="secondary-btn" type="button">
 
-        <header class="game_header">
-            <section class="game_header_left">
-                <div class="game_header_left_score-Blue">
-                    <span class="score_color-blue">Blue</span>
-                    <span id="blueScore" class="score">0</span>
-                </div>
-                <div class="game_header_left_score-Orange">
-                    <span class="score_color-orange">Orange</span>
-                    <span id="orangeScore" class="score">6</span>
-                </div>
-            </section>
-            <section class="game_header_center">
-                <span class="game_header_center_text">
-                    Current player:
-                </span>
-                <div class="game_header_center_icon" id="game_header_center_icon">
-                    <img id="currentPlayer-icon-img" src="../public/assets/labelBlueCtheme.svg" alt="" srcset="">
-                </div>
-            </section>
-            <section class="game_header_right">
-                <button class="secondary-btn" type="submit">
+            <span>Exit game</span>
+        </button>
+    </section>
+</header>
+<section id="game_cards" class="game_cards">
 
-                    <span>Exit game</span>
-                </button>
-            </section>
-        </header>
-        <section id="game_cards" class="game_cards">
-
-        </section>
-    </main>
-    <script type="module" src="/src/main.ts"> </script>
-</body>
+</section>
+<dialog id="exit-dialog">
+    <p>Are you sure you want to quit the game</p>
+    <button class="btn-back" id="btn-back" type="button">Back to Game</button>
+    <button class="btn-exit" id="btn-exit" type="button">Exit game</button>
+</dialog>

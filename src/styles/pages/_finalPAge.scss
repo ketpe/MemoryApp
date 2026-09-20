@@ -12,10 +12,18 @@
     background-color: t(final-bg-color);
     width: 100%;
     height: 100%;
-    padding: 41px 112px;
     text-align: center;
-    @include mx.flex-center(column);
+    @include mx.flex-start-center(column);
     font-family: t(game_header-fontfamily);
+    position: relative;
+}
+
+.final-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 318px;
     background-image: t(final-header-bg-img);
     background-repeat: no-repeat;
     background-position: top center;
@@ -25,15 +33,12 @@
 
 .final-center {
     @include mx.flex-center();
+    padding: t(final-center-padding);
 
     &-firstheadline {
-        color: white;
+        color: t(final_firstheadline-color);
         margin: 0;
-        padding: 0 0 8px 0;
 
-        [data-theme="fTheme"] {
-            color: #A45212;
-        }
     }
 
     &-winnerheadline {
@@ -52,12 +57,12 @@
         }
 
         [data-theme="gTheme"] &[data-winner="pBlue"] {
-            color: cyan;
+            color: white;
         }
 
         // Beispiel
         [data-theme="gTheme"] &[data-winner="pOrange"] {
-            color: yellow;
+            color: white;
         }
 
         [data-theme="fTheme"] &[data-winner="pBlue"] {
@@ -74,9 +79,11 @@
 
 
         &-blue {
-            width: 200px;
-            height: 250px;
-            @include mx.bg-image(t(final_bg-img-blue), 200px, 250px)
+            width: 260px;
+            height: 298px;
+            @include mx.bg-image(t(final_bg-img-blue), 200px, 250px);
+            background-position: center;
+            background-color: t(final_bg-img-color);
         }
 
         &-orange {
@@ -93,11 +100,30 @@
         margin-top: 64px;
         @extend .secondary-btn;
         @include mx.redRose-bold(24px);
-        color: white;
+        color: t(final-btn-color);
         white-space: nowrap;
         background-color: t(final-btn-bg-color);
 
+        span::before {
+            display: none;
+        }
     }
 
+    [data-theme="fTheme"] .btn-backToStart {
+        background-color: t(final-btn-bg-color);
+        color: t(final-btn-color);
+
+        span {
+            color: t(final-btn-color);
+        }
+
+        &:hover {
+            background-color: t(secBtn-bg-color);
+
+            span {
+                color: t(secBtn-text-color);
+            }
+        }
+    }
 
 }

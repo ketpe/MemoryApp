@@ -1,0 +1,9 @@
+@use "../abstract/mixins" as mx;
+@use"../themes/theme" as *;
+
+@include theme-generator($themes);
+
+dialog {
+    width: t(dialog-width);
+    height: t(dialog-height);
+}
