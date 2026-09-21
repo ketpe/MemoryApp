@@ -3,7 +3,6 @@
 @use "../base/_typography";
 @use "../themes/theme" as *;
 
-
 * {
     box-sizing: border-box;
 }
@@ -226,3 +225,69 @@
 
     }
 }
+
+.btn-back {
+    height: 57px;
+    padding: t(dialog_backBtn-padding);
+    background-color: t(dialog-backBtn-bg);
+    border: none;
+    border: t(dialog-backBtn-border);
+    border-radius: 10px;
+    border-image: t(border-image) 3 stretch;
+    gap: 10px;
+    text-align: center;
+    color: t(dialog-backBtn-color);
+
+    @include mx.font(t(game_header-fontfamily), t(game_header-left-fontweight), t(game_header-left-fontstyle), t(dialog-btn-fontsize));
+
+    &:hover {
+        background-color: t(dialog-backBtn-hover-bg);
+        color: t(dialog-backBtn-hover-color);
+        outline: t(dialog-backBtn-border);
+    }
+
+}
+
+[data-theme="cTheme"] .btn-back {
+    border-radius: 0;
+}
+
+.btn-exit {
+    box-sizing: border-box;
+    height: 57px;
+    @include mx.flex-center(row);
+    padding: t(dialog_exitBtn-padding);
+    border: none;
+    border: t(dialog-exitBtn-border);
+    border-image: t(border-image) 3 stretch;
+    background-color: t(dialog-exitBtn-bg);
+    gap: 10px;
+    border-radius: 10px;
+    text-align: center;
+    @include mx.font(t(game_header-fontfamily), t(game_header-left-fontweight), t(game_header-left-fontstyle), t(dialog-btn-fontsize));
+    color: t(dialog-exitBtn-color);
+
+    &:hover {
+        background-color: t(dialog-exitBtn-hover-bg);
+        color: t(dialog-exitBtn-hover-color);
+        outline: t(dialog-exitBtn-border);
+    }
+
+}
+
+[data-theme="cTheme"] .btn-back,
+[data-theme="cTheme"] .btn-exit {
+    border-radius: 0;
+}
+
+[data-theme="dTheme"].btn-back,
+[data-theme="dTheme"].btn-exit {
+    box-shadow: 3px 3px 5px 0px #2F2E2E33;
+
+}
+
+// [data-theme="fTheme"].btn-exit {
+//     border: none;
+//     border-image: t(border-image) 3 stretch;
+//     border-radius: 10px;
+// }

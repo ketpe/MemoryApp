@@ -1,9 +1,19 @@
 @use "../abstract/mixins" as mx;
+@use "../abstract/colors" as colors;
 @use"../themes/theme" as *;
 
 @include theme-generator($themes);
 
 dialog {
+    background-color: colors.$preview-gray;
     width: t(dialog-width);
     height: t(dialog-height);
+    border-radius: 20px;
+    border: none;
+    @include mx.font(t(game_header-fontfamily), t(game_header-left-fontweight), t(game_header-left-fontstyle), t(dialog-fontsize));
+
+}
+
+[data-theme="cTheme"]dialog {
+    border-radius: 0;
 }
