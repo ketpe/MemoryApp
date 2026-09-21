@@ -5,14 +5,40 @@
 @include theme-generator($themes);
 
 dialog {
+    box-sizing: content-box;
     background-color: colors.$preview-gray;
     width: t(dialog-width);
-    height: t(dialog-height);
+    // height: t(dialog-height);
     border-radius: 20px;
+
     border: none;
+    padding: 40px;
+    gap: 40px;
     @include mx.font(t(game_header-fontfamily), t(game_header-left-fontweight), t(game_header-left-fontstyle), t(dialog-fontsize));
 
+    .dialog-content {
+        @include mx.flex-center();
+        // width: 376px;
+        gap: 54px;
+
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .dialog-btn {
+            @include mx.flex-center(row);
+            gap: 24px;
+
+        }
+    }
+
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
 }
+
+
 
 [data-theme="cTheme"]dialog {
     border-radius: 0;

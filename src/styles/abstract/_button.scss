@@ -237,6 +237,7 @@
     gap: 10px;
     text-align: center;
     color: t(dialog-backBtn-color);
+    white-space: nowrap;
 
     @include mx.font(t(game_header-fontfamily), t(game_header-left-fontweight), t(game_header-left-fontstyle), t(dialog-btn-fontsize));
 
@@ -253,8 +254,9 @@
 }
 
 .btn-exit {
-    box-sizing: border-box;
     height: 57px;
+    white-space: nowrap;
+    box-sizing: border-box;
     @include mx.flex-center(row);
     padding: t(dialog_exitBtn-padding);
     border: none;

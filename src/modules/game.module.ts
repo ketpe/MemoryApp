@@ -64,13 +64,15 @@ export class Game {
         const REF_BTN_BACK = document.getElementById('btn-back');
         const REF_BTN_EXIT = document.getElementById('btn-exit');
         if (!REF_BTN_BACK || !REF_BTN_EXIT) return;
-        if (this.globalSettings.theme.selectedTheme == "cTheme" || "dTheme") {
+        if (this.globalSettings.theme.selectedTheme === "cTheme" || "dTheme") {
             REF_BTN_BACK.innerHTML = 'Back to game';
             REF_BTN_EXIT.innerHTML = 'Exit game';
-        } else if (this.globalSettings.theme.selectedTheme == "gTheme") {
-            REF_BTN_BACK.innerHTML = 'No, back to ';
+        }
+        if (this.globalSettings.theme.selectedTheme === "gTheme") {
+            REF_BTN_BACK.innerHTML = 'No, back to game';
             REF_BTN_EXIT.innerHTML = 'Yes, quit game';
-        } else if (this.globalSettings.theme.selectedTheme == "fTheme") {
+        }
+        if (this.globalSettings.theme.selectedTheme === "fTheme") {
             REF_BTN_BACK.innerHTML = 'NO, BACK TO GAME';
             REF_BTN_EXIT.innerHTML = 'EXIT GAME';
         }

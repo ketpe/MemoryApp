@@ -118,8 +118,3 @@
 [data-theme="fTheme"] .game_cards[data-boardSize="bSize2"] {
     gap: 8px;
 }
-
-.dialog-btn {
-    @include mx.flex-center(row);
-    gap: 24px;
-}
