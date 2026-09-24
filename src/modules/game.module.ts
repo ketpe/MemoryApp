@@ -1,5 +1,5 @@
 import { GameSettings, GameTheme } from "../types/settings.type";
-import { Card, GameState } from "../types/game.type";
+import { Card, GameState, matchWinner } from "../types/game.type";
 import { CONTENT, render, renderCard, loadGameover, loadFinalScreen } from "../main";
 import gamepage from '../template/game-page.html?raw';
 import '../styles/main.scss';
@@ -20,7 +20,8 @@ export class Game {
             currentPlayer: this.globalSettings.player.selectedPlayer,
             isLocked: false,
             pointsPlayerBlue: 0,
-            pointsPlayerOrange: 0
+            pointsPlayerOrange: 0,
+            matchWinner: null,
         };
         this.state = createProxy(RAW_STATE, () => this.updateGame());
         this.initGame();
@@ -101,6 +102,8 @@ export class Game {
     }
 
     private setCurrentPoints() {
+        //FIXME -
+        // this.state.pointsPlayerBlue = this.state.pointsPlayerOrange;
         const REF_BLUE_POINTS = document.getElementById('blueScore') as HTMLElement;
         const REF_ORANGE_POINTS = document.getElementById('orangeScore') as HTMLElement;
         if (!REF_BLUE_POINTS && !REF_ORANGE_POINTS) return;
@@ -160,23 +163,35 @@ export class Game {
     }
 
     private loadAttributesForFinalpage() {
-        const matchWinner = (this.state.pointsPlayerBlue > this.state.pointsPlayerOrange) ? 'pBlue' : 'pOrange'
+        this.state.pointsPlayerBlue = this.state.pointsPlayerOrange;
+        if (this.state.pointsPlayerBlue > this.state.pointsPlayerOrange) this.state.matchWinner = "pBlue";
+        else if (this.state.pointsPlayerBlue < this.state.pointsPlayerOrange) this.state.matchWinner = "pOrange";
+        else if (this.state.pointsPlayerBlue === this.state.pointsPlayerOrange) this.state.matchWinner = "draw";
+        if (!this.state.matchWinner) return;
         const REF_WINNER_ICON = document.getElementById('final-center-img') as HTMLElement;
         const REF_WINNER_TEXT = document.getElementById('final-center-winnerheadline') as HTMLElement;
-        if (!REF_WINNER_ICON || !REF_WINNER_TEXT) return;
-        REF_WINNER_TEXT.setAttribute('data-winner', matchWinner);
-        this.setAttributesforWinner(matchWinner, REF_WINNER_ICON, REF_WINNER_TEXT);
+        const REF_FINAL_CENTER = document.querySelector('.final-center') as HTMLElement;
+        const REF_WINNER_TEXT_HEADLINE = document.getElementById('final-center-firstheadline') as HTMLElement;
+        if (!REF_WINNER_ICON || !REF_WINNER_TEXT || !REF_WINNER_TEXT_HEADLINE || !REF_FINAL_CENTER) return;
+        REF_FINAL_CENTER.setAttribute('data-winner', this.state.matchWinner);
+        this.setAttributesforWinner(this.state.matchWinner, REF_WINNER_ICON, REF_WINNER_TEXT, REF_WINNER_TEXT_HEADLINE);
         this.setBtnAttributesforBtn();
     }
 
-    private setAttributesforWinner(matchWinner: string, WINNER_ICON: HTMLElement, WINNER_TEXT: HTMLElement) {
+    private setAttributesforWinner(matchWinner: string, WINNER_ICON: HTMLElement, WINNER_TEXT: HTMLElement, WINNER_HEADLINE: HTMLElement) {
         if (matchWinner === 'pBlue') {
+            WINNER_HEADLINE.innerHTML = ("The winner is")
             WINNER_ICON.classList = ("final-center-img-blue");
             WINNER_TEXT.innerHTML = ("Blue Player");
             WINNER_TEXT.style
-        } else {
+        } else if (matchWinner === 'pOrange') {
+            WINNER_HEADLINE.innerHTML = ("The winner is")
             WINNER_ICON.classList = ("final-center-img-orange");
-            WINNER_TEXT.innerHTML = ("Blue Player");
+            WINNER_TEXT.innerHTML = ("Orange Player");
+        } else {
+            WINNER_HEADLINE.innerHTML = ("It's a")
+            WINNER_ICON.classList = ("final-center-img-draw");
+            WINNER_TEXT.innerHTML = ("DRAW");
         }
     }
 

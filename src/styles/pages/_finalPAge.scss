@@ -31,6 +31,14 @@
 
 }
 
+[data-theme="cTheme"].main-container-final:has(.final-center[data-winner="draw"]) .final-header {
+    display: none;
+}
+
+[data-theme="cTheme"].main-container-final:has(.final-center[data-winner="draw"]) .final-center {
+    padding-top: 192.5px;
+}
+
 .final-center {
     @include mx.flex-center();
     padding: t(final-center-padding);
@@ -38,7 +46,11 @@
     &-firstheadline {
         color: t(final_firstheadline-color);
         margin: 0;
+        font-size: 28px;
 
+        &[data-winner="draw"] .final-center-firstheadline {
+            color: t(final-draw-firstheadline-color);
+        }
     }
 
     &-winnerheadline {
@@ -47,31 +59,31 @@
         font-size: t(final_winnerheadline-fontsize);
         text-transform: t(final-headline-text-transform);
         color: white;
+        text-shadow: 4px 4px 4px #00000040;
 
-        [data-theme="cTheme"] &[data-winner="pBlue"] {
-            color: colors.$player-blue;
+
+    }
+
+    &[data-winner="pBlue"] {
+        .final-center-winnerheadline {
+            color: t(final-winner-blue-color);
+        }
+    }
+
+    &[data-winner="pOrange"] {
+        .final-center-winnerheadline {
+            color: t(final-winner-orange-color);
+        }
+    }
+
+    &[data-winner="draw"] {
+        .final-center-firstheadline {
+            color: t(final-draw-firstheadline-color);
         }
 
-        [data-theme="cTheme"] &[data-winner="pOrange"] {
-            color: colors.$player-orange;
-        }
-
-        [data-theme="gTheme"] &[data-winner="pBlue"] {
-            color: white;
-        }
-
-        // Beispiel
-        [data-theme="gTheme"] &[data-winner="pOrange"] {
-            color: white;
-        }
-
-        [data-theme="fTheme"] &[data-winner="pBlue"] {
-            color: #A45212;
-        }
-
-        // Beispiel
-        [data-theme="fTheme"] &[data-winner="pOrange"] {
-            color: #A45212;
+        .final-center-winnerheadline {
+            color: t(final-winner-draw-color);
+            font-size: t(final-winner-draw-fontsize);
         }
     }
 
@@ -92,6 +104,11 @@
             @include mx.bg-image(t(final_bg-img-orange), 200px, 250px)
         }
 
+        &-draw {
+            width: 339.42px;
+            height: 272.08px;
+            @include mx.bg-image(t(final_bg-img-draw), 339.42px, 272.08px)
+        }
 
 
     }
