@@ -9,12 +9,15 @@ export const CONTENT = document.getElementById("main-container") as HTMLElement;
 
 
 function init(): void {
-  CONTENT.innerHTML = "";
-  CONTENT.innerHTML = startpage;
-  CONTENT.className = "main-container-startPage";
-  const START_BTN = document.getElementById('hero-btn') as HTMLElement;
-  START_BTN?.addEventListener('click', loadSettings);
+  loadStartPage();
 };
+
+export function loadStartPage() {
+  render(startpage, "main-container-startPage");
+
+  const startBtn = document.getElementById("hero-btn");
+  startBtn?.addEventListener("click", loadSettings);
+}
 
 function loadSettings(): void {
   render(settingsPage, "main-container-settingsPage");

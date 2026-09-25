@@ -15,4 +15,5 @@ export interface GameSettings {
     theme: ThemeForm;
     player: ChoosedPlayerForm;
     board: BoardSizeForm;
+    Initialized: boolean;
 }

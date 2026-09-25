@@ -1,7 +1,6 @@
 // Zentraler Event-Listener für alle Änderungen im Dokument
 import { GameSettings, GameTheme, ChoosedPlayer, BoardSize } from "../types/settings.type";
 import { Game } from '../modules/game.module'
-
 /**
  * Hier wird ein Proxhandler für die globalSettings erstellt
  */
@@ -31,14 +30,17 @@ const settingsHandler: ProxyHandler<any> = {
 export let globalSettings: GameSettings = new Proxy({
     theme: { selectedTheme: 'cTheme' },
     player: { selectedPlayer: null },
-    board: { selectedBoardSize: null }
+    board: { selectedBoardSize: null },
 }, settingsHandler)
+
+let settingsListenerInitialized = false;
 
 /**
  * schaltet den Btn für den Spielbeginn frei
  */
 function enableStartBtn(): void {
-    const startBtn = document.getElementById('game-start-btn') as HTMLButtonElement
+    const startBtn = document.getElementById('game-start-btn') as HTMLButtonElement | null
+    if (!startBtn) return;
     startBtn.disabled = false;
     startBtn.addEventListener('click', startGame, { once: true });
 }
@@ -68,13 +70,15 @@ function hasAnyNull(obj: any): boolean {
  * Initialisiert Eventlistner für das ganze dokument, prüft ob es ein RadioBtn ist und leitet dann zur unterscheidung weiter
  */
 export function initSettings(): void {
-    document.addEventListener('change', (event: Event) => {
+    if (settingsListenerInitialized) return;
+    settingsListenerInitialized = true;
+
+    document.addEventListener("change", (event: Event) => {
         const target = event.target as HTMLInputElement;
-        if (target && target.type === 'radio') {
-            const settingName = target.name;
-            const selectedValue = target.value;
-            const label = document.querySelector<HTMLLabelElement>(`label[for="${target.id}"]`)?.innerHTML;
-            processInput(settingName, selectedValue, label);
+
+        if (target?.type === "radio") {
+            const label = document.querySelector<HTMLLabelElement>(`label[for="${target.id}"]`);
+            processInput(target.name, target.value, label?.innerHTML);
         }
     });
 }
@@ -127,4 +131,8 @@ function adjustBoard(value: string, label?: string) {
         previewBoardText.innerHTML = label ?? '';
     }
 }
-
+export function resetSettings() {
+    globalSettings.theme.selectedTheme = "cTheme";
+    globalSettings.player.selectedPlayer = null;
+    globalSettings.board.selectedBoardSize = null;
+}

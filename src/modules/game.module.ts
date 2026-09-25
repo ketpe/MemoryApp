@@ -1,6 +1,7 @@
 import { GameSettings, GameTheme } from "../types/settings.type";
+import { resetSettings } from "../modules/settings";
 import { Card, GameState, matchWinner } from "../types/game.type";
-import { CONTENT, render, renderCard, loadGameover, loadFinalScreen } from "../main";
+import { CONTENT, render, renderCard, loadGameover, loadFinalScreen, loadStartPage } from "../main";
 import gamepage from '../template/game-page.html?raw';
 import '../styles/main.scss';
 import { createProxy } from "./gameStateProxy";
@@ -151,6 +152,7 @@ export class Game {
                 this.loadAttributesForFinalpage();
             }, 2500);
         }
+        //FIXME - Orginal wieder einsetzen
         // if (this.state.matchedCards.length === this.state.cards.length) {
         //     this.state.isLocked = true;
         //     loadGameover();
@@ -183,7 +185,6 @@ export class Game {
             WINNER_HEADLINE.innerHTML = ("The winner is")
             WINNER_ICON.classList = ("final-center-img-blue");
             WINNER_TEXT.innerHTML = ("Blue Player");
-            WINNER_TEXT.style
         } else if (matchWinner === 'pOrange') {
             WINNER_HEADLINE.innerHTML = ("The winner is")
             WINNER_ICON.classList = ("final-center-img-orange");
@@ -202,8 +203,12 @@ export class Game {
             REF_BACK_BTN.innerHTML = "Back to Start";
         } else {
             REF_BACK_BTN.innerHTML = "Home";
-
         }
+        REF_BACK_BTN.addEventListener('click', () => this.handleBackClick())
+    }
+    private handleBackClick() {
+        resetSettings();
+        loadStartPage();
     }
 
     private checkmatch() {
@@ -272,13 +277,8 @@ export class Game {
     }
     private addEventlistnerforDialog() {
         const DIALOG = document.getElementById('exit-dialog') as HTMLDialogElement
-        console.log(DIALOG);
-
         const OPEN_DIALOG = document.getElementById('btn-exit-dialog') as HTMLButtonElement;
-        console.log(OPEN_DIALOG);
-
         const CLOSE_DIALOG = document.getElementById('btn-back') as HTMLButtonElement;
-        console.log(CLOSE_DIALOG);
 
         if (DIALOG && OPEN_DIALOG && CLOSE_DIALOG) {
 
