@@ -152,7 +152,7 @@ export class Game {
             }, 2500);
         }
         // if (this.state.matchedCards.length === this.state.cards.length) {
-        // this.state.isLocked = true;
+        //     this.state.isLocked = true;
         //     loadGameover();
         //     this.setCurrentPoints();
         //     setTimeout(() => {
@@ -163,7 +163,7 @@ export class Game {
     }
 
     private loadAttributesForFinalpage() {
-        this.state.pointsPlayerBlue = this.state.pointsPlayerOrange;
+        // this.state.pointsPlayerBlue = this.state.pointsPlayerOrange;
         if (this.state.pointsPlayerBlue > this.state.pointsPlayerOrange) this.state.matchWinner = "pBlue";
         else if (this.state.pointsPlayerBlue < this.state.pointsPlayerOrange) this.state.matchWinner = "pOrange";
         else if (this.state.pointsPlayerBlue === this.state.pointsPlayerOrange) this.state.matchWinner = "draw";

@@ -91,6 +91,8 @@ $themes: (
         "final-btn-bg-color":"",
         "final-center-padding": 318px 0 8px 0,
         "final-btn-color": white,
+        "final-btn-width": 204px,
+        "final-btn-height": 62px,
     ),
     "gTheme": ("bg-color": colors.$bg-gtheme,
         "bg-header": colors.$bg-header-gtheme,
@@ -181,6 +183,8 @@ $themes: (
         "final-btn-bg-color":colors.$secondary-btn-bg-gtheme,
         "final-center-padding": 192.5px 0 8px 0,
         "final-btn-color": white,
+        "final-btn-width": 107px,
+        "final-btn-height": 49px,
     ),
     "dTheme": ("bg-color": white,
         "bg-header": colors.$bg-header-gtheme,
@@ -271,6 +275,8 @@ $themes: (
         "final-btn-bg-color": colors.$secBtn-bg-dtheme,
         "final-center-padding": 192.5px 0 8px 0,
         "final-btn-color": white,
+        "final-btn-width": 98px,
+        "final-btn-height": 48px,
     ),
     "fTheme": ("bg-color": white,
         "bg-header": colors.$bg-header-gtheme,
@@ -361,6 +367,8 @@ $themes: (
         "final_bg-img-color": colors.$final-winner-img-bg-color,
         "final-center-padding": 192.5px 0 8px 0,
         "final-btn-color": white,
+        "final-btn-width": 97px,
+        "final-btn-height": 45px,
     )
 );
 

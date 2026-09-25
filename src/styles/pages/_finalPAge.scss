@@ -114,6 +114,9 @@
     }
 
     .btn-backToStart {
+        width: t(final-btn-width);
+        height: t(final-btn-height);
+
         margin-top: 64px;
         @extend .secondary-btn;
         @include mx.redRose-bold(24px);
@@ -126,21 +129,22 @@
         }
     }
 
-    [data-theme="fTheme"] .btn-backToStart {
-        background-color: t(final-btn-bg-color);
+
+}
+
+.main-container-final[data-theme="fTheme"] .btn-backToStart {
+    background-color: t(final-btn-bg-color);
+    color: t(final-btn-color);
+
+    span {
         color: t(final-btn-color);
-
-        span {
-            color: t(final-btn-color);
-        }
-
-        &:hover {
-            background-color: t(secBtn-bg-color);
-
-            span {
-                color: t(secBtn-text-color);
-            }
-        }
     }
 
+    &:hover {
+        background-color: t(secBtn-bg-color);
+
+        span {
+            color: t(secBtn-text-color);
+        }
+    }
 }
