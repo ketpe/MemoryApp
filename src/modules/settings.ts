@@ -7,16 +7,11 @@ import { Game } from '../modules/game.module'
 const SETTINGS_HANDLER: ProxyHandler<any> = {
     get(TARGET, prop) {
         const VALUE = TARGET[prop];
-        if (VALUE && typeof VALUE === 'object') {
-            return new Proxy(VALUE, SETTINGS_HANDLER);
-        }
-        return VALUE;
+        return (VALUE && typeof VALUE === 'object') ? new Proxy(VALUE, SETTINGS_HANDLER) : VALUE;
     },
     set(TARGET, prop, VALUE) {
         TARGET[prop] = VALUE;
-        if (!hasAnyNull(globalSettings)) {
-            enableStartBtn();
-        }
+        if (!hasAnyNull(globalSettings)) enableStartBtn();
         return true;
     }
 };
@@ -37,42 +32,31 @@ let settingsListenerInitialized = false;
  * schaltet den Btn für den Spielbeginn frei
  */
 function enableStartBtn(): void {
-    const START_BTN = document.getElementById('game-start-btn') as HTMLButtonElement | null
-    if (!START_BTN) return;
-    START_BTN.disabled = false;
-    console.log(START_BTN.disabled);
-    START_BTN.addEventListener('click', startGame, { once: true });
+    const BTN = document.getElementById('game-start-btn') as HTMLButtonElement | null;
+    if (!BTN) return;
+    BTN.disabled = false;
+    BTN.onclick = () => new Game(globalSettings).initGame();
 }
+
 function startGame(): void {
     const GAME = new Game(globalSettings);
     GAME.initGame();
 }
 
-
 function hasAnyNull(obj: any): boolean {
-    for (const key in obj) {
-        if (obj[key] === null) {
-            return true;
-        }
-        if (typeof obj[key] === 'object' && obj[key] !== null) {
-            if (hasAnyNull(obj[key])) {
-                return true;
-            }
-        }
-    }
-    return false;
+    return Object.values(obj).some(val =>
+        val === null || (typeof val === 'object' && hasAnyNull(val))
+    );
 }
 
 export function initSettings(): void {
     if (settingsListenerInitialized) return;
     settingsListenerInitialized = true;
-
-    document.addEventListener("change", (event: Event) => {
-        const TARGET = event.target as HTMLInputElement;
-
-        if (TARGET?.type === "radio") {
-            const LABEL = document.querySelector<HTMLLabelElement>(`LABEL[for="${TARGET.id}"]`);
-            processInput(TARGET.name, TARGET.value, LABEL?.innerHTML);
+    document.addEventListener("change", (e: Event) => {
+        const T = e.target as HTMLInputElement;
+        if (T?.type === "radio") {
+            const L = document.querySelector<HTMLLabelElement>(`[for="${T.id}"]`);
+            processInput(T.name, T.value, L?.innerHTML);
         }
     });
 }
@@ -83,33 +67,21 @@ export function initSettings(): void {
  * @param value
  * @param LABEL
  */
-function processInput(name: string, value: string, LABEL?: string): void {
-    switch (name) {
-        case 'selectedTheme':
-            adjustTheme(value, LABEL);
-            globalSettings.theme.selectedTheme = value as GameTheme;
-            break;
-        case 'selectedPlayer':
-            adjustPlayer(value, LABEL);
-            globalSettings.player.selectedPlayer = value as ChoosedPlayer;
-            break;
-        case 'selectedBoardSize':
-            globalSettings.board.selectedBoardSize = value as BoardSize;
-            adjustBoard(value, LABEL);
-            break;
-    }
+function processInput(name: string, value: string, L?: string): void {
+    const MAPPERS: Record<string, Function> = {
+        selectedTheme: () => { adjustTheme(value, L); globalSettings.theme.selectedTheme = value as any; },
+        selectedPlayer: () => { adjustPlayer(value, L); globalSettings.player.selectedPlayer = value as any; },
+        selectedBoardSize: () => { adjustBoard(value, L); globalSettings.board.selectedBoardSize = value as any; }
+    };
+    MAPPERS[name]?.();
 }
 
 
-function adjustTheme(value: string, LABEL?: string) {
-    const PREVIEW_THEME_TEXT = document.getElementById('preview-theme');
-    const PREVIEW_THEME_IMG = document.getElementById('setting_preview-Picture-img') as HTMLImageElement;
-    if (PREVIEW_THEME_TEXT) {
-        PREVIEW_THEME_TEXT.innerHTML = LABEL ?? '';
-    }
-    if (PREVIEW_THEME_IMG) {
-        PREVIEW_THEME_IMG.src = `../assets/preview-${value}.png`
-    }
+function adjustTheme(v: string, L?: string) {
+    const TXT = document.getElementById('preview-theme');
+    const IMG = document.getElementById('setting_preview-Picture-img') as HTMLImageElement;
+    if (TXT) TXT.innerHTML = L ?? '';
+    if (IMG) IMG.src = `../assets/preview-${v}.png`;
 }
 
 function adjustPlayer(value: string, LABEL?: string) {
