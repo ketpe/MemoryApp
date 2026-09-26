@@ -12,10 +12,8 @@ const SETTINGS_HANDLER: ProxyHandler<any> = {
         }
         return VALUE;
     },
-
     set(TARGET, prop, VALUE) {
         TARGET[prop] = VALUE;
-
         if (!hasAnyNull(globalSettings)) {
             enableStartBtn();
         }
@@ -42,16 +40,15 @@ function enableStartBtn(): void {
     const START_BTN = document.getElementById('game-start-btn') as HTMLButtonElement | null
     if (!START_BTN) return;
     START_BTN.disabled = false;
+    console.log(START_BTN.disabled);
     START_BTN.addEventListener('click', startGame, { once: true });
 }
 function startGame(): void {
     const GAME = new Game(globalSettings);
-
+    GAME.initGame();
 }
 
-/**
- * Hilfsfunktion zur Überprüfung für Proxy ob in dem Object noch eine null ist. Prüft auch verschachtelte objecte
- */
+
 function hasAnyNull(obj: any): boolean {
     for (const key in obj) {
         if (obj[key] === null) {
@@ -66,9 +63,6 @@ function hasAnyNull(obj: any): boolean {
     return false;
 }
 
-/**
- * Initialisiert Eventlistner für das ganze dokument, prüft ob es ein RadioBtn ist und leitet dann zur unterscheidung weiter
- */
 export function initSettings(): void {
     if (settingsListenerInitialized) return;
     settingsListenerInitialized = true;

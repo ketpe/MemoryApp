@@ -1,17 +1,24 @@
 import { GameSettings, GameTheme } from "../types/settings.type";
 import { resetSettings } from "../modules/settings";
 import { Card, GameState, matchWinner } from "../types/game.type";
-import { CONTENT, render, renderCard, loadGameover, loadFinalScreen, loadStartPage } from "../main";
+import { CONTENT, render, renderCard, loadStartPage } from "../main";
 import gamepage from '../template/game-page.html?raw';
 import '../styles/main.scss';
 import { createProxy } from "./gameStateProxy";
+import { CardService } from "./card.service";
+import { GameUi } from "./game.ui";
+import { GameLogic } from "./game.logic";
 
 export class Game {
     private globalSettings: GameSettings;
     CONTENT: HTMLElement;
     private state: GameState;
+    private cardService: CardService;
+    private gameUi: GameUi;
+    private gameLogic: GameLogic;
 
     constructor(globalSettings: GameSettings) {
+        this.cardService = new CardService();
         this.globalSettings = globalSettings;
         this.CONTENT = CONTENT;
         const RAW_STATE: GameState = {
@@ -25,18 +32,13 @@ export class Game {
             matchWinner: null,
         };
         this.state = createProxy(RAW_STATE, () => this.updateGame());
-        this.initGame();
+        this.gameUi = new GameUi(this.globalSettings, CONTENT, this.state, this);
+        this.gameLogic = new GameLogic(this.state, this.gameUi);
+        this.gameUi.setGameLogic(this.gameLogic);
+        this.cardService.setGameLogic(this);
     }
 
-    /**
-     * SCHRITT 1: Die Update-Zentrale
-     * Diese Funktion wird jetzt AUTOMATISCH vom Proxy aufgerufen,
-     * sobald sich IRGENDETWAS im State ändert (z.B. currentPlayer wechselt oder Karten ändern sich).
-     */
-    updateGame() {
-        this.setCurrentPlayerStateHTML();
-        // Falls du später das Spielfeld basierend auf Karten-Status neu rendern willst, kommt das auch hier rein.
-    }
+
 
     /**
      * Initialisiert das Spiel, setzt die Attribute fürs HTML und startet das erstellen des Decks.
@@ -52,203 +54,34 @@ export class Game {
         );
         this.setCurrentPlayerStateHTML();
         this.createDeck();
-        this.addEventlistnerforCards();
-        this.addEventlistnerforDialog();
+        this.cardService.addEventlistnerforCards();
+        this.gameUi.addEventlistnerforDialog();
+    }
+
+
+    updateGame() {
+        this.setCurrentPlayerStateHTML();
     }
 
     private setCurrentPlayerStateHTML() {
-        this.chooseImgForTheme();
-        this.setCurrentPoints();
-        this.flippCards();
-        this.setDialogText();
+        this.gameUi.chooseImgForTheme();
+        this.gameUi.setCurrentPoints();
+        this.gameUi.flippCards();
+        this.gameUi.setDialogText();
     }
-    private setDialogText() {
-        const REF_BTN_BACK = document.getElementById('btn-back');
-        const REF_BTN_EXIT = document.getElementById('btn-exit');
-        if (!REF_BTN_BACK || !REF_BTN_EXIT) return;
-        if (this.globalSettings.theme.selectedTheme === "cTheme" || this.globalSettings.theme.selectedTheme === "dTheme") {
-            REF_BTN_BACK.innerHTML = 'Back to game';
-            REF_BTN_EXIT.innerHTML = 'Exit game';
-        }
-        if (this.globalSettings.theme.selectedTheme === "gTheme") {
-            REF_BTN_BACK.innerHTML = 'No, back to game';
-            REF_BTN_EXIT.innerHTML = 'Yes, quit game';
-        }
-        if (this.globalSettings.theme.selectedTheme === "fTheme") {
-            REF_BTN_BACK.innerHTML = 'NO, BACK TO GAME';
-            REF_BTN_EXIT.innerHTML = 'EXIT GAME';
-        }
-    }
-
-    private chooseImgForTheme() {
-        const PLAYER_ICON: HTMLElement | null = document.getElementById('currentPlayer-icon-img');
-        if (!PLAYER_ICON) return;
-        this.globalSettings.theme.selectedTheme === 'cTheme' ? this.setCthemePlayerIcon(PLAYER_ICON) : this.setPlayerIcon(PLAYER_ICON);
-    }
-
-    private setCthemePlayerIcon(PLAYER_ICON: HTMLElement) {
-        this.state.currentPlayer === 'pBlue'
-            ? PLAYER_ICON.setAttribute('src', '../public/assets/labelBlueCtheme.svg')
-            : PLAYER_ICON.setAttribute('src', '../public/assets/labelOrangeCtheme.svg');
-    }
-
-    private setPlayerIcon(PLAYER_ICON: HTMLElement) {
-        const PLAYER_ICON_BG = document.getElementById('game_header_center_icon');
-        if (!PLAYER_ICON_BG) return;
-        PLAYER_ICON.setAttribute('src', '../public/assets/chess_pawnWhite.svg');
-        this.state.currentPlayer === 'pBlue'
-            ? PLAYER_ICON_BG.style.backgroundColor = '#1FAAFC'
-            : PLAYER_ICON_BG.style.backgroundColor = '#F58E39';
-    }
-
-    private setCurrentPoints() {
-        const REF_BLUE_POINTS = document.getElementById('blueScore') as HTMLElement;
-        const REF_ORANGE_POINTS = document.getElementById('orangeScore') as HTMLElement;
-        if (!REF_BLUE_POINTS && !REF_ORANGE_POINTS) return;
-        REF_BLUE_POINTS.innerHTML = this.state.pointsPlayerBlue.toString();
-        REF_ORANGE_POINTS.innerHTML = this.state.pointsPlayerOrange.toString();
-    }
-    private flippCards() {
-        this.state.cards.forEach(
-            card => {
-                const ELEMENT = document.getElementById(String(card.id));
-                if (!ELEMENT) return;
-                if (card.isFlipped === true) {
-                    const CARD = ELEMENT.closest('.card');
-                    if (CARD) {
-                        CARD.classList.add("is-flipped")
-                    }
-                } else {
-                    const CARD = ELEMENT.closest('.card');
-                    if (CARD) {
-                        CARD.classList.remove("is-flipped")
-                    }
-                }
-            });
-    }
-
 
     public handleCardClick(CARD_ID: number) {
         if (this.state.isLocked) return;
         const CLICKED_CARD = this.state.cards.find(card => card.id === CARD_ID);
         if (CLICKED_CARD && !CLICKED_CARD.isFlipped) {
-            this.setflippCardsState(CLICKED_CARD);
+            this.gameLogic.setflippCardsState(CLICKED_CARD);
         }
         if (this.state.flippedCards.length == 2) {
-            this.checkmatch();
+            this.gameLogic.checkmatch();
         }
         if (this.state.matchedCards.length === this.state.cards.length) {
-            this.startMatchGameover();
+            this.gameLogic.startMatchGameover();
         }
-    }
-
-    private startMatchGameover() {
-        this.state.isLocked = true;
-        loadGameover();
-        this.setCurrentPoints();
-        setTimeout(() => {
-            loadFinalScreen();
-            this.loadAttributesForFinalpage();
-        }, 2500);
-    }
-
-    private setflippCardsState(CLICKED_CARD: Card) {
-        CLICKED_CARD.isFlipped = true;
-        this.state.flippedCards.push(CLICKED_CARD);
-
-    }
-
-    private loadAttributesForFinalpage() {
-        this.getMatchWinner();
-        if (!this.state.matchWinner) return;
-        const REFS = this.getFinalScreenRefs();
-        if (!REFS) return;
-        REFS.REF_FINAL_CENTER.setAttribute('data-winner', this.state.matchWinner);
-        this.setAttributesforWinner(this.state.matchWinner, REFS.REF_WINNER_ICON, REFS.REF_WINNER_TEXT, REFS.REF_WINNER_TEXT_HEADLINE);
-        this.setBtnAttributesforBtn();
-    }
-
-    private getFinalScreenRefs() {
-        const REF_WINNER_ICON = document.getElementById('final-center-img') as HTMLElement;
-        const REF_WINNER_TEXT = document.getElementById('final-center-winnerheadline') as HTMLElement;
-        const REF_FINAL_CENTER = document.querySelector('.final-center') as HTMLElement;
-        const REF_WINNER_TEXT_HEADLINE = document.getElementById('final-center-firstheadline') as HTMLElement;
-        if (!REF_WINNER_ICON || !REF_WINNER_TEXT || !REF_WINNER_TEXT_HEADLINE || !REF_FINAL_CENTER) { return null }
-        return { REF_WINNER_ICON, REF_WINNER_TEXT, REF_FINAL_CENTER, REF_WINNER_TEXT_HEADLINE }
-    }
-
-    private getMatchWinner() {
-        if (this.state.pointsPlayerBlue > this.state.pointsPlayerOrange) this.state.matchWinner = "pBlue";
-        else if (this.state.pointsPlayerBlue < this.state.pointsPlayerOrange) this.state.matchWinner = "pOrange";
-        else if (this.state.pointsPlayerBlue === this.state.pointsPlayerOrange) this.state.matchWinner = "draw";
-    }
-
-    private setAttributesforWinner(matchWinner: string, WINNER_ICON: HTMLElement, WINNER_TEXT: HTMLElement, WINNER_HEADLINE: HTMLElement) {
-        if (matchWinner === 'pBlue') {
-            WINNER_HEADLINE.innerHTML = ("The winner is")
-            WINNER_ICON.classList = ("final-center-img-blue");
-            WINNER_TEXT.innerHTML = ("Blue Player");
-        } else if (matchWinner === 'pOrange') {
-            WINNER_HEADLINE.innerHTML = ("The winner is")
-            WINNER_ICON.classList = ("final-center-img-orange");
-            WINNER_TEXT.innerHTML = ("Orange Player");
-        } else {
-            WINNER_HEADLINE.innerHTML = ("It's a")
-            WINNER_ICON.classList = ("final-center-img-draw");
-            WINNER_TEXT.innerHTML = ("DRAW");
-        }
-    }
-
-    setBtnAttributesforBtn() {
-        const REF_BACK_BTN = document.getElementById("btn-backToStart")?.querySelector('span');
-        if (!REF_BACK_BTN) return;
-        if (this.globalSettings.theme.selectedTheme === 'cTheme') {
-            REF_BACK_BTN.innerHTML = "Back to Start";
-        } else {
-            REF_BACK_BTN.innerHTML = "Home";
-        }
-        REF_BACK_BTN.addEventListener('click', () => this.handleBackClick())
-    }
-    private handleBackClick() {
-        resetSettings();
-        loadStartPage();
-    }
-
-    private checkmatch() {
-        this.state.isLocked = true;
-        const CARD1 = this.state.flippedCards[0];
-        const CARD2 = this.state.flippedCards[1];
-        if (CARD1.value === CARD2.value) {
-            this.cardMatch(CARD1, CARD2);
-        } else {
-            this.cardMismatch(CARD1, CARD2);
-            this.togglePlayer();
-        }
-    }
-    private togglePlayer() {
-        this.state.currentPlayer = this.state.currentPlayer === 'pBlue' ? 'pOrange' : 'pBlue';
-    }
-    private cardMatch(CARD1: Card, CARD2: Card) {
-        this.state.matchedCards.push(CARD1, CARD2);
-        this.state.cards.forEach(card => {
-            if (card.id === CARD1.id || card.id === CARD2.id) {
-                card.isMatched = true;
-                this.addPoints();
-            }
-        });
-        this.state.flippedCards.splice(0, 2);
-        this.state.isLocked = false;
-    }
-    private cardMismatch(CARD1: Card, CARD2: Card) {
-        setTimeout(() => {
-            CARD1.isFlipped = false;
-            CARD2.isFlipped = false;
-        }, 1000);
-        this.state.flippedCards.splice(0, 2);
-        this.state.isLocked = false;
-    }
-    private addPoints() {
-        this.state.currentPlayer === "pBlue" ? this.state.pointsPlayerBlue += 1 : this.state.pointsPlayerOrange += 1;
     }
 
     private loadBoardSize() {
@@ -260,55 +93,10 @@ export class Game {
         const THEME: GameTheme = this.loadTheme();
         const BOARD_SIZE: number = this.loadBoardSize();
         if (!THEME || !BOARD_SIZE) return;
-        this.state.cards = this.createCardArray(THEME, BOARD_SIZE);
-        const BOARD_CARDES = this.state.cards.map(el => this.creatCardHTML(el, THEME)).join('');
+        this.state.cards = this.cardService.createCardArray(THEME, BOARD_SIZE);
+        const BOARD_CARDES = this.state.cards.map(el => this.cardService.creatCardHTML(el, THEME)).join('');
         if (!BOARD_CARDES) return;
         renderCard(BOARD_CARDES, 'game_cards', BOARD_SIZE);
-    }
-
-
-    private addEventlistnerforCards() {
-        const GAME_CARDS = document.getElementById("game_cards");
-        if (GAME_CARDS) {
-            GAME_CARDS.addEventListener('click', e => {
-                const CARD_ELEMENT = (e.target as HTMLElement).closest(".card") as HTMLButtonElement;
-                if (CARD_ELEMENT) {
-                    const CARD_ID = Number(CARD_ELEMENT.id);
-                    this.handleCardClick(CARD_ID);
-                }
-            });
-        }
-    }
-    private addEventlistnerforDialog() {
-        const DIALOG = document.getElementById('exit-dialog') as HTMLDialogElement
-        const OPEN_DIALOG = document.getElementById('btn-exit-dialog') as HTMLButtonElement;
-        const CLOSE_DIALOG = document.getElementById('btn-back') as HTMLButtonElement;
-
-        if (DIALOG && OPEN_DIALOG && CLOSE_DIALOG) {
-
-            OPEN_DIALOG.addEventListener('click', () => this.openDialog(DIALOG))
-            CLOSE_DIALOG.addEventListener('click', () => this.closeDialog(DIALOG))
-        } else {
-            console.log('Fehler');
-
-        };
-    }
-
-    private openDialog(DIALOG: HTMLDialogElement) {
-        DIALOG.showModal();
-    }
-
-    private closeDialog(DIALOG: HTMLDialogElement) {
-        DIALOG.close();
-    }
-
-    private creatCardHTML(element: Card, THEME: string) {
-        return `<button aria-label="card-btn" id="${element.id}" class="card">
-    <div class="card__inner">
-        <div class="card__face" style="background-image: url(./assets/cards/${THEME}/${THEME}Card_1.png)"></div>
-        <div class="card__face card__face--back" style="background-image: url(${element.value})"></div>
-    </div>
-</button>`;
     }
 
     private loadTheme() {
@@ -316,26 +104,8 @@ export class Game {
         return theme;
     }
 
-    private createCardArray(THEME: string, BOARD_SIZE: number): Card[] {
-        const CARDS_ARRAY: Card[] = [];
-        for (let i = 2; i <= BOARD_SIZE / 2 + 1; i++) {
-            const CARD_BASE = {
-                value: `./assets/cards/${THEME}/${THEME}Card_${i}.png`,
-                isFlipped: false,
-                isMatched: false,
-            };
-            CARDS_ARRAY.push({ ...CARD_BASE, id: i * 10 + 1 });
-            CARDS_ARRAY.push({ ...CARD_BASE, id: i * 10 + 2 });
-        }
-        this.shuffleCards(CARDS_ARRAY);
-        return CARDS_ARRAY;
-    }
-
-    private shuffleCards(CARDS_ARRAY: Array<object>): Array<object> {
-        for (let i = CARDS_ARRAY.length - 1; i > 0; i--) {
-            const J = Math.floor(Math.random() * (i + 1));
-            [CARDS_ARRAY[i], CARDS_ARRAY[J]] = [CARDS_ARRAY[J], CARDS_ARRAY[i]];
-        }
-        return CARDS_ARRAY;
+    public handleBackClick() {
+        resetSettings();
+        loadStartPage();
     }
 }
