@@ -1,5 +1,5 @@
-import { Card, GameState, matchWinner } from "../types/game.type";
-import { GameSettings, GameTheme } from "../types/settings.type";
+import { GameState } from "../types/game.type";
+import { GameSettings } from "../types/settings.type";
 import { GameLogic } from "./game.logic";
 import { Game } from "./game.module";
 

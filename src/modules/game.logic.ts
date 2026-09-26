@@ -1,6 +1,6 @@
 import { Card, GameState } from "../types/game.type";
 import { GameUi } from "./game.ui";
-import { loadGameover, loadFinalScreen, loadStartPage } from "../main";
+import { loadGameover, loadFinalScreen } from "../main";
 
 
 export class GameLogic {

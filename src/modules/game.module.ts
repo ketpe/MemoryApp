@@ -1,6 +1,6 @@
 import { GameSettings, GameTheme } from "../types/settings.type";
 import { resetSettings } from "../modules/settings";
-import { Card, GameState, matchWinner } from "../types/game.type";
+import { GameState } from "../types/game.type";
 import { CONTENT, render, renderCard, loadStartPage } from "../main";
 import gamepage from '../template/game-page.html?raw';
 import '../styles/main.scss';
