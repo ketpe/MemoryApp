@@ -15,8 +15,8 @@ function init(): void {
 export function loadStartPage() {
   render(startpage, "main-container-startPage");
 
-  const startBtn = document.getElementById("hero-btn");
-  startBtn?.addEventListener("click", loadSettings);
+  const START_BTN = document.getElementById("hero-btn");
+  START_BTN?.addEventListener("click", loadSettings);
 }
 
 function loadSettings(): void {
@@ -44,20 +44,3 @@ export function loadFinalScreen(): void {
 };
 
 init();
-
-
-
-/*
-init();
-function init() {
-    const fieldRef = document.getElementById("field")
-    if (fieldRef) {
-        fieldRef.addEventListener('click', e => {
-            const card = (e.target as HTMLElement).closest(".card") as HTMLButtonElement
-            if (card) {
-                card.classList.toggle("is-flipped");
-            }
-        })
-    }
-}
- */

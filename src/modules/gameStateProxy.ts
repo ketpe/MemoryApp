@@ -2,14 +2,14 @@
 export function createProxy<T extends object>(target: T, onChange: () => void): T {
     return new Proxy(target, {
         get(obj, prop) {
-            const value = obj[prop as keyof T];
-            if (value !== null && typeof value === 'object') {
-                return createProxy(value as any, onChange);
+            const VALUE = obj[prop as keyof T];
+            if (VALUE !== null && typeof VALUE === 'object') {
+                return createProxy(VALUE as any, onChange);
             }
-            return value;
+            return VALUE;
         },
-        set(obj, prop, value) {
-            obj[prop as keyof T] = value;
+        set(obj, prop, VALUE) {
+            obj[prop as keyof T] = VALUE;
             onChange(); // Hier lösen wir automatisch die UI-Aktualisierung aus!
             return true;
         }

@@ -4,17 +4,17 @@ import { Game } from '../modules/game.module'
 /**
  * Hier wird ein Proxhandler für die globalSettings erstellt
  */
-const settingsHandler: ProxyHandler<any> = {
-    get(target, prop) {
-        const VALUE = target[prop];
+const SETTINGS_HANDLER: ProxyHandler<any> = {
+    get(TARGET, prop) {
+        const VALUE = TARGET[prop];
         if (VALUE && typeof VALUE === 'object') {
-            return new Proxy(VALUE, settingsHandler);
+            return new Proxy(VALUE, SETTINGS_HANDLER);
         }
         return VALUE;
     },
 
-    set(target, prop, VALUE) {
-        target[prop] = VALUE;
+    set(TARGET, prop, VALUE) {
+        TARGET[prop] = VALUE;
 
         if (!hasAnyNull(globalSettings)) {
             enableStartBtn();
@@ -31,7 +31,7 @@ export let globalSettings: GameSettings = new Proxy({
     theme: { selectedTheme: 'cTheme' },
     player: { selectedPlayer: null },
     board: { selectedBoardSize: null },
-}, settingsHandler)
+}, SETTINGS_HANDLER)
 
 let settingsListenerInitialized = false;
 
@@ -39,10 +39,10 @@ let settingsListenerInitialized = false;
  * schaltet den Btn für den Spielbeginn frei
  */
 function enableStartBtn(): void {
-    const startBtn = document.getElementById('game-start-btn') as HTMLButtonElement | null
-    if (!startBtn) return;
-    startBtn.disabled = false;
-    startBtn.addEventListener('click', startGame, { once: true });
+    const START_BTN = document.getElementById('game-start-btn') as HTMLButtonElement | null
+    if (!START_BTN) return;
+    START_BTN.disabled = false;
+    START_BTN.addEventListener('click', startGame, { once: true });
 }
 function startGame(): void {
     const GAME = new Game(globalSettings);
@@ -74,11 +74,11 @@ export function initSettings(): void {
     settingsListenerInitialized = true;
 
     document.addEventListener("change", (event: Event) => {
-        const target = event.target as HTMLInputElement;
+        const TARGET = event.target as HTMLInputElement;
 
-        if (target?.type === "radio") {
-            const label = document.querySelector<HTMLLabelElement>(`label[for="${target.id}"]`);
-            processInput(target.name, target.value, label?.innerHTML);
+        if (TARGET?.type === "radio") {
+            const LABEL = document.querySelector<HTMLLabelElement>(`LABEL[for="${TARGET.id}"]`);
+            processInput(TARGET.name, TARGET.value, LABEL?.innerHTML);
         }
     });
 }
@@ -87,48 +87,48 @@ export function initSettings(): void {
  * Wird vom Eventlistner aufgerufen und gibt an die jeweilige Einstellungsfunktion weiter
  * @param name
  * @param value
- * @param label
+ * @param LABEL
  */
-function processInput(name: string, value: string, label?: string): void {
+function processInput(name: string, value: string, LABEL?: string): void {
     switch (name) {
         case 'selectedTheme':
-            adjustTheme(value, label);
+            adjustTheme(value, LABEL);
             globalSettings.theme.selectedTheme = value as GameTheme;
             break;
         case 'selectedPlayer':
-            adjustPlayer(value, label);
+            adjustPlayer(value, LABEL);
             globalSettings.player.selectedPlayer = value as ChoosedPlayer;
             break;
         case 'selectedBoardSize':
             globalSettings.board.selectedBoardSize = value as BoardSize;
-            adjustBoard(value, label);
+            adjustBoard(value, LABEL);
             break;
     }
 }
 
 
-function adjustTheme(value: string, label?: string) {
-    const previewThemeText = document.getElementById('preview-theme');
-    const previewThemeImg = document.getElementById('setting_preview-Picture-img') as HTMLImageElement;
-    if (previewThemeText) {
-        previewThemeText.innerHTML = label ?? '';
+function adjustTheme(value: string, LABEL?: string) {
+    const PREVIEW_THEME_TEXT = document.getElementById('preview-theme');
+    const PREVIEW_THEME_IMG = document.getElementById('setting_preview-Picture-img') as HTMLImageElement;
+    if (PREVIEW_THEME_TEXT) {
+        PREVIEW_THEME_TEXT.innerHTML = LABEL ?? '';
     }
-    if (previewThemeImg) {
-        previewThemeImg.src = `../assets/preview-${value}.png`
-    }
-}
-
-function adjustPlayer(value: string, label?: string) {
-    const previewPlayerText = document.getElementById('preview-player');
-    if (previewPlayerText) {
-        previewPlayerText.innerHTML = label ?? '';
+    if (PREVIEW_THEME_IMG) {
+        PREVIEW_THEME_IMG.src = `../assets/preview-${value}.png`
     }
 }
 
-function adjustBoard(value: string, label?: string) {
-    const previewBoardText = document.getElementById('preview-board');
-    if (previewBoardText) {
-        previewBoardText.innerHTML = label ?? '';
+function adjustPlayer(value: string, LABEL?: string) {
+    const PREVIEW_PLAYER_TEXT = document.getElementById('preview-player');
+    if (PREVIEW_PLAYER_TEXT) {
+        PREVIEW_PLAYER_TEXT.innerHTML = LABEL ?? '';
+    }
+}
+
+function adjustBoard(value: string, LABEL?: string) {
+    const PREVIEW_BOARD_TEXT = document.getElementById('preview-board');
+    if (PREVIEW_BOARD_TEXT) {
+        PREVIEW_BOARD_TEXT.innerHTML = LABEL ?? '';
     }
 }
 export function resetSettings() {

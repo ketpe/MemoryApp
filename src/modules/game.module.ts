@@ -66,7 +66,7 @@ export class Game {
         const REF_BTN_BACK = document.getElementById('btn-back');
         const REF_BTN_EXIT = document.getElementById('btn-exit');
         if (!REF_BTN_BACK || !REF_BTN_EXIT) return;
-        if (this.globalSettings.theme.selectedTheme === "cTheme" || "dTheme") {
+        if (this.globalSettings.theme.selectedTheme === "cTheme" || this.globalSettings.theme.selectedTheme === "dTheme") {
             REF_BTN_BACK.innerHTML = 'Back to game';
             REF_BTN_EXIT.innerHTML = 'Exit game';
         }
@@ -78,7 +78,6 @@ export class Game {
             REF_BTN_BACK.innerHTML = 'NO, BACK TO GAME';
             REF_BTN_EXIT.innerHTML = 'EXIT GAME';
         }
-
     }
 
     private chooseImgForTheme() {
@@ -103,8 +102,6 @@ export class Game {
     }
 
     private setCurrentPoints() {
-        //FIXME -
-        // this.state.pointsPlayerBlue = this.state.pointsPlayerOrange;
         const REF_BLUE_POINTS = document.getElementById('blueScore') as HTMLElement;
         const REF_ORANGE_POINTS = document.getElementById('orangeScore') as HTMLElement;
         if (!REF_BLUE_POINTS && !REF_ORANGE_POINTS) return;
@@ -131,53 +128,59 @@ export class Game {
     }
 
 
-    public handleCardClick(cardId: number) {
+    public handleCardClick(CARD_ID: number) {
         if (this.state.isLocked) return;
-        const clickedCard = this.state.cards.find(card => card.id === cardId);
-        if (clickedCard && !clickedCard.isFlipped) {
-            clickedCard.isFlipped = true;
-            this.state.flippedCards.push(clickedCard);
-
+        const CLICKED_CARD = this.state.cards.find(card => card.id === CARD_ID);
+        if (CLICKED_CARD && !CLICKED_CARD.isFlipped) {
+            this.setflippCardsState(CLICKED_CARD);
         }
         if (this.state.flippedCards.length == 2) {
-            this.state.isLocked = true;
             this.checkmatch();
         }
-        if (this.state.matchedCards.length == 2) {
-            this.state.isLocked = true;
-            loadGameover();
-            this.setCurrentPoints();
-            setTimeout(() => {
-                loadFinalScreen();
-                this.loadAttributesForFinalpage();
-            }, 2500);
+        if (this.state.matchedCards.length === this.state.cards.length) {
+            this.startMatchGameover();
         }
-        //FIXME - Orginal wieder einsetzen
-        // if (this.state.matchedCards.length === this.state.cards.length) {
-        //     this.state.isLocked = true;
-        //     loadGameover();
-        //     this.setCurrentPoints();
-        //     setTimeout(() => {
-        //         loadFinalScreen();
-        //         this.loadAttributesForFinalpage();
-        //     }, 2500);
-        // }
+    }
+
+    private startMatchGameover() {
+        this.state.isLocked = true;
+        loadGameover();
+        this.setCurrentPoints();
+        setTimeout(() => {
+            loadFinalScreen();
+            this.loadAttributesForFinalpage();
+        }, 2500);
+    }
+
+    private setflippCardsState(CLICKED_CARD: Card) {
+        CLICKED_CARD.isFlipped = true;
+        this.state.flippedCards.push(CLICKED_CARD);
+
     }
 
     private loadAttributesForFinalpage() {
-        // this.state.pointsPlayerBlue = this.state.pointsPlayerOrange;
-        if (this.state.pointsPlayerBlue > this.state.pointsPlayerOrange) this.state.matchWinner = "pBlue";
-        else if (this.state.pointsPlayerBlue < this.state.pointsPlayerOrange) this.state.matchWinner = "pOrange";
-        else if (this.state.pointsPlayerBlue === this.state.pointsPlayerOrange) this.state.matchWinner = "draw";
+        this.getMatchWinner();
         if (!this.state.matchWinner) return;
+        const REFS = this.getFinalScreenRefs();
+        if (!REFS) return;
+        REFS.REF_FINAL_CENTER.setAttribute('data-winner', this.state.matchWinner);
+        this.setAttributesforWinner(this.state.matchWinner, REFS.REF_WINNER_ICON, REFS.REF_WINNER_TEXT, REFS.REF_WINNER_TEXT_HEADLINE);
+        this.setBtnAttributesforBtn();
+    }
+
+    private getFinalScreenRefs() {
         const REF_WINNER_ICON = document.getElementById('final-center-img') as HTMLElement;
         const REF_WINNER_TEXT = document.getElementById('final-center-winnerheadline') as HTMLElement;
         const REF_FINAL_CENTER = document.querySelector('.final-center') as HTMLElement;
         const REF_WINNER_TEXT_HEADLINE = document.getElementById('final-center-firstheadline') as HTMLElement;
-        if (!REF_WINNER_ICON || !REF_WINNER_TEXT || !REF_WINNER_TEXT_HEADLINE || !REF_FINAL_CENTER) return;
-        REF_FINAL_CENTER.setAttribute('data-winner', this.state.matchWinner);
-        this.setAttributesforWinner(this.state.matchWinner, REF_WINNER_ICON, REF_WINNER_TEXT, REF_WINNER_TEXT_HEADLINE);
-        this.setBtnAttributesforBtn();
+        if (!REF_WINNER_ICON || !REF_WINNER_TEXT || !REF_WINNER_TEXT_HEADLINE || !REF_FINAL_CENTER) { return null }
+        return { REF_WINNER_ICON, REF_WINNER_TEXT, REF_FINAL_CENTER, REF_WINNER_TEXT_HEADLINE }
+    }
+
+    private getMatchWinner() {
+        if (this.state.pointsPlayerBlue > this.state.pointsPlayerOrange) this.state.matchWinner = "pBlue";
+        else if (this.state.pointsPlayerBlue < this.state.pointsPlayerOrange) this.state.matchWinner = "pOrange";
+        else if (this.state.pointsPlayerBlue === this.state.pointsPlayerOrange) this.state.matchWinner = "draw";
     }
 
     private setAttributesforWinner(matchWinner: string, WINNER_ICON: HTMLElement, WINNER_TEXT: HTMLElement, WINNER_HEADLINE: HTMLElement) {
@@ -212,6 +215,7 @@ export class Game {
     }
 
     private checkmatch() {
+        this.state.isLocked = true;
         const CARD1 = this.state.flippedCards[0];
         const CARD2 = this.state.flippedCards[1];
         if (CARD1.value === CARD2.value) {
@@ -248,8 +252,8 @@ export class Game {
     }
 
     private loadBoardSize() {
-        const board_Size = this.globalSettings.board.selectedBoardSize === 'bSize1' ? 16 : this.globalSettings.board.selectedBoardSize === 'bSize2' ? 24 : this.globalSettings.board.selectedBoardSize === 'bSize3' ? 36 : 0;
-        return board_Size;
+        const BOARD_SIZE = this.globalSettings.board.selectedBoardSize === 'bSize1' ? 16 : this.globalSettings.board.selectedBoardSize === 'bSize2' ? 24 : this.globalSettings.board.selectedBoardSize === 'bSize3' ? 36 : 0;
+        return BOARD_SIZE;
     }
 
     private createDeck() {
@@ -269,8 +273,8 @@ export class Game {
             GAME_CARDS.addEventListener('click', e => {
                 const CARD_ELEMENT = (e.target as HTMLElement).closest(".card") as HTMLButtonElement;
                 if (CARD_ELEMENT) {
-                    const cardId = Number(CARD_ELEMENT.id);
-                    this.handleCardClick(cardId);
+                    const CARD_ID = Number(CARD_ELEMENT.id);
+                    this.handleCardClick(CARD_ID);
                 }
             });
         }
@@ -329,8 +333,8 @@ export class Game {
 
     private shuffleCards(CARDS_ARRAY: Array<object>): Array<object> {
         for (let i = CARDS_ARRAY.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [CARDS_ARRAY[i], CARDS_ARRAY[j]] = [CARDS_ARRAY[j], CARDS_ARRAY[i]];
+            const J = Math.floor(Math.random() * (i + 1));
+            [CARDS_ARRAY[i], CARDS_ARRAY[J]] = [CARDS_ARRAY[J], CARDS_ARRAY[i]];
         }
         return CARDS_ARRAY;
     }
