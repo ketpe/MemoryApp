@@ -95,7 +95,8 @@ export class GameUi {
         if (!REFS) return;
         REFS.REF_FINAL_CENTER.setAttribute('data-winner', this.state.matchWinner);
         this.setAttributesforWinner(this.state.matchWinner, REFS.REF_WINNER_ICON, REFS.REF_WINNER_TEXT, REFS.REF_WINNER_TEXT_HEADLINE);
-        this.setBtnAttributesforBtn();
+        this.setBtnAttributesforBack();
+        this.setBtnAttributesforExit();
     }
 
     private getFinalScreenRefs() {
@@ -123,7 +124,7 @@ export class GameUi {
         }
     }
 
-    public setBtnAttributesforBtn() {
+    public setBtnAttributesforBack() {
         const REF_BACK_BTN = document.getElementById("btn-backToStart")?.querySelector('span');
         if (!REF_BACK_BTN || !this.gameLogic) return;
         if (this.globalSettings.theme.selectedTheme === 'cTheme') {
@@ -138,11 +139,12 @@ export class GameUi {
         const DIALOG = document.getElementById('exit-dialog') as HTMLDialogElement
         const OPEN_DIALOG = document.getElementById('btn-exit-dialog') as HTMLButtonElement;
         const CLOSE_DIALOG = document.getElementById('btn-back') as HTMLButtonElement;
-
-        if (DIALOG && OPEN_DIALOG && CLOSE_DIALOG) {
+        const EXIT_GAME = document.getElementById('btn-exit') as HTMLButtonElement;
+        if (DIALOG && OPEN_DIALOG && CLOSE_DIALOG && EXIT_GAME) {
 
             OPEN_DIALOG.addEventListener('click', () => this.openDialog(DIALOG))
             CLOSE_DIALOG.addEventListener('click', () => this.closeDialog(DIALOG))
+            EXIT_GAME.addEventListener('click', () => this.exitGame(DIALOG))
         } else {
             console.log('Fehler');
 
@@ -155,5 +157,9 @@ export class GameUi {
 
     private closeDialog(DIALOG: HTMLDialogElement) {
         DIALOG.close();
+    }
+    private exitGame(DIALOG: HTMLDialogElement) {
+        DIALOG.close();
+        this.game.handleBackClick();
     }
 }
