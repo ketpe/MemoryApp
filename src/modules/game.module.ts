@@ -9,6 +9,10 @@ import { CardService } from "./card.service";
 import { GameUi } from "./game.ui";
 import { GameLogic } from "./game.logic";
 
+/**
+ * Main game controller class.
+ * Handles initialization, game state management, and UI coordination.
+ */
 export class Game {
     private globalSettings: GameSettings;
     CONTENT: HTMLElement;
@@ -41,12 +45,13 @@ export class Game {
 
 
     /**
-     * Initialisiert das Spiel, setzt die Attribute fürs HTML und startet das erstellen des Decks.
+     * Initializes the game, sets HTML attributes, and generates the card deck.
      */
     initGame() {
         render(gamepage, 'main-container-game');
         if (!this.CONTENT) return;
         this.CONTENT.setAttribute('data-theme', this.globalSettings.theme.selectedTheme as string);
+        document.body.setAttribute('data-theme', this.globalSettings.theme.selectedTheme as string)
         this.CONTENT.setAttribute('data-boardSize', this.globalSettings.board.selectedBoardSize as string);
         document.getElementById('game_cards')?.setAttribute(
             'data-boardSize',
@@ -59,10 +64,16 @@ export class Game {
     }
 
 
+    /**
+     * Updates the UI based on state changes.
+     */
     updateGame() {
         this.setCurrentPlayerStateHTML();
     }
 
+    /**
+     * Updates player-specific UI elements.
+     */
     private setCurrentPlayerStateHTML() {
         this.gameUi.chooseImgForTheme();
         this.gameUi.setCurrentPoints();
@@ -70,6 +81,10 @@ export class Game {
         this.gameUi.setDialogText();
     }
 
+    /**
+     * Handles user interaction with cards.
+     * @param CARD_ID - The ID of the clicked card.
+     */
     public handleCardClick(CARD_ID: number) {
         if (this.state.isLocked) return;
         const CLICKED_CARD = this.state.cards.find(card => card.id === CARD_ID);
@@ -84,11 +99,18 @@ export class Game {
         }
     }
 
+    /**
+     * Determines numeric board size based on settings.
+     * @returns {number} The board size.
+     */
     private loadBoardSize() {
         const BOARD_SIZE = this.globalSettings.board.selectedBoardSize === 'bSize1' ? 16 : this.globalSettings.board.selectedBoardSize === 'bSize2' ? 24 : this.globalSettings.board.selectedBoardSize === 'bSize3' ? 36 : 0;
         return BOARD_SIZE;
     }
 
+    /**
+     * Generates and renders the card deck.
+     */
     private createDeck() {
         const THEME: GameTheme = this.loadTheme();
         const BOARD_SIZE: number = this.loadBoardSize();
@@ -99,13 +121,21 @@ export class Game {
         renderCard(BOARD_CARDES, 'game_cards', BOARD_SIZE);
     }
 
+    /**
+     * Retrieves the selected game theme.
+     * @returns {GameTheme} The active theme.
+     */
     private loadTheme() {
         let theme: GameTheme = this.globalSettings.theme.selectedTheme;
         return theme;
     }
 
+    /**
+     * Handles navigation back to the start page.
+     */
     public handleBackClick() {
         resetSettings();
         loadStartPage();
     }
 }
+

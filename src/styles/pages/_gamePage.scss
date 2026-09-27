@@ -118,3 +118,9 @@
 [data-theme="fTheme"] .game_cards[data-boardSize="bSize2"] {
     gap: 8px;
 }
+
+@include mx.widescreen() {
+    body:has(#main-container.main-container-game) {
+        background-color: t(bg-color);
+    }
+}

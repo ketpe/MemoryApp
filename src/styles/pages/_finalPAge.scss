@@ -6,10 +6,8 @@
 
 @include theme-generator($themes);
 
-//
-
 .main-container-final {
-    background-color: t(final-bg-color);
+    background-color: t(go-bg-color);
     width: 100%;
     height: 100%;
     text-align: center;
@@ -146,5 +144,11 @@
         span {
             color: t(secBtn-text-color);
         }
+    }
+}
+
+@include mx.widescreen() {
+    body:has(#main-container.main-container-final) {
+        background-color: t(go-bg-color);
     }
 }

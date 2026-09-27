@@ -3,6 +3,7 @@
 @use "../abstract/colors" as colors;
 @use"../base/typography";
 
+
 .main-container {
     position: relative;
     width: 100%;
@@ -48,5 +49,12 @@
         color: #F0EA6E;
         height: auto;
         background-image: url(./assets/stadia_controller.svg);
+    }
+
+}
+
+@include mx.widescreen() {
+    body:has(#main-container.main-container-startPage) {
+        background-color: colors.$home-background;
     }
 }

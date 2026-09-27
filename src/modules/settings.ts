@@ -1,8 +1,9 @@
 // Zentraler Event-Listener für alle Änderungen im Dokument
 import { GameSettings, GameTheme, ChoosedPlayer, BoardSize } from "../types/settings.type";
 import { Game } from '../modules/game.module'
+
 /**
- * Hier wird ein Proxhandler für die globalSettings erstellt
+ * Global settings object proxy handler to detect changes.
  */
 const SETTINGS_HANDLER: ProxyHandler<any> = {
     get(TARGET, prop) {
@@ -17,9 +18,8 @@ const SETTINGS_HANDLER: ProxyHandler<any> = {
 };
 
 /**
- *  GlobalSettings wird mit einem Proxy erstellt um diese überwachen zu können.
+ * Global game configuration object.
  */
-
 export let globalSettings: GameSettings = new Proxy({
     theme: { selectedTheme: 'cTheme' },
     player: { selectedPlayer: null },
@@ -29,7 +29,7 @@ export let globalSettings: GameSettings = new Proxy({
 let settingsListenerInitialized = false;
 
 /**
- * schaltet den Btn für den Spielbeginn frei
+ * Enables the game start button and attaches the click handler.
  */
 function enableStartBtn(): void {
     const BTN = document.getElementById('game-start-btn') as HTMLButtonElement | null;
@@ -38,17 +38,28 @@ function enableStartBtn(): void {
     BTN.onclick = () => new Game(globalSettings).initGame();
 }
 
+/**
+ * Starts the game with the current global settings.
+ */
 function startGame(): void {
     const GAME = new Game(globalSettings);
     GAME.initGame();
 }
 
+/**
+ * Recursively checks if any value in the object is null.
+ * @param obj The object to check.
+ * @returns True if at least one value is null, otherwise false.
+ */
 function hasAnyNull(obj: any): boolean {
     return Object.values(obj).some(val =>
         val === null || (typeof val === 'object' && hasAnyNull(val))
     );
 }
 
+/**
+ * Initializes the global settings event listeners.
+ */
 export function initSettings(): void {
     if (settingsListenerInitialized) return;
     settingsListenerInitialized = true;
@@ -62,10 +73,10 @@ export function initSettings(): void {
 }
 
 /**
- * Wird vom Eventlistner aufgerufen und gibt an die jeweilige Einstellungsfunktion weiter
- * @param name
- * @param value
- * @param LABEL
+ * Routes user input to the appropriate update function.
+ * @param name The setting name.
+ * @param value The selected value.
+ * @param L The label text (optional).
  */
 function processInput(name: string, value: string, L?: string): void {
     const MAPPERS: Record<string, Function> = {
@@ -76,7 +87,11 @@ function processInput(name: string, value: string, L?: string): void {
     MAPPERS[name]?.();
 }
 
-
+/**
+ * Updates the theme preview in the UI.
+ * @param v The theme identifier.
+ * @param L The label text.
+ */
 function adjustTheme(v: string, L?: string) {
     const TXT = document.getElementById('preview-theme');
     const IMG = document.getElementById('setting_preview-Picture-img') as HTMLImageElement;
@@ -84,6 +99,11 @@ function adjustTheme(v: string, L?: string) {
     if (IMG) IMG.src = `../assets/preview-${v}.png`;
 }
 
+/**
+ * Updates the player preview in the UI.
+ * @param value The player identifier.
+ * @param LABEL The label text.
+ */
 function adjustPlayer(value: string, LABEL?: string) {
     const PREVIEW_PLAYER_TEXT = document.getElementById('preview-player');
     if (PREVIEW_PLAYER_TEXT) {
@@ -91,14 +111,24 @@ function adjustPlayer(value: string, LABEL?: string) {
     }
 }
 
+/**
+ * Updates the board size preview in the UI.
+ * @param value The board size identifier.
+ * @param LABEL The label text.
+ */
 function adjustBoard(value: string, LABEL?: string) {
     const PREVIEW_BOARD_TEXT = document.getElementById('preview-board');
     if (PREVIEW_BOARD_TEXT) {
         PREVIEW_BOARD_TEXT.innerHTML = LABEL ?? '';
     }
 }
+
+/**
+ * Resets the global settings to initial values.
+ */
 export function resetSettings() {
     globalSettings.theme.selectedTheme = "cTheme";
     globalSettings.player.selectedPlayer = null;
     globalSettings.board.selectedBoardSize = null;
 }
+

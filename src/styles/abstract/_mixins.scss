@@ -74,3 +74,9 @@
     background-position: left center;
     filter: $filter;
 }
+
+@mixin widescreen {
+    @media (min-width: 1440px) {
+        @content
+    }
+}

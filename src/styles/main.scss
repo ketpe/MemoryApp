@@ -1,13 +1,42 @@
 @use "./_main.scss";
 @use "./abstract/mixins" as mx;
+@use"./themes/theme" as *;
+
+@include theme-generator($themes);
 
 body {
     height: 100vh;
     margin: 0;
+
 }
 
 .main-container {
     width: 100%;
     height: 100%;
     @include mx.flex-center();
+}
+
+// @include mx.widescreen() {
+
+//     .main-container,
+//     .main-container-final,
+//     .main-container-game,
+//     .main-container-gameover,
+//     .settings-container {
+//         max-width: 1440px;
+//         margin: 0 auto;
+
+//         background-color: transparent !important;
+//     }
+// }
+
+
+.content-wrapper {
+    width: 100%;
+    height: 100%;
+
+    @include mx.widescreen() {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
 }

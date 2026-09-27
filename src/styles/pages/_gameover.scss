@@ -6,8 +6,6 @@
 
 @include theme-generator($themes);
 
-//
-
 .main-container-gameover {
     background-color: t(go-bg-color);
     width: 100%;
@@ -80,4 +78,10 @@
     }
 
 
+}
+
+@include mx.widescreen() {
+    body:has(#main-container.main-container-gameover) {
+        background-color: t(go-bg-color);
+    }
 }

@@ -10,6 +10,9 @@ export class GameUi {
     private gameLogic?: GameLogic;
     private game: Game;
 
+    /**
+     * Initializes the Game UI.
+     */
     constructor(globalSettings: GameSettings, CONTENT: HTMLElement, gameState: GameState, game: Game) {
         this.globalSettings = globalSettings;
         this.CONTENT = CONTENT;
@@ -17,22 +20,27 @@ export class GameUi {
         this.game = game;
 
     }
+
+    /** Sets the game logic reference. */
     public setGameLogic(gameLogic: GameLogic) {
         this.gameLogic = gameLogic;
     }
 
+    /** Updates the player icon based on the current theme. */
     public chooseImgForTheme() {
         const PLAYER_ICON: HTMLElement | null = document.getElementById('currentPlayer-icon-img');
         if (!PLAYER_ICON) return;
         this.globalSettings.theme.selectedTheme === 'cTheme' ? this.setCthemePlayerIcon(PLAYER_ICON) : this.setPlayerIcon(PLAYER_ICON);
     }
 
+    /** Sets icon for C-Theme. */
     private setCthemePlayerIcon(PLAYER_ICON: HTMLElement) {
         this.state.currentPlayer === 'pBlue'
             ? PLAYER_ICON.setAttribute('src', '../public/assets/labelBlueCtheme.svg')
             : PLAYER_ICON.setAttribute('src', '../public/assets/labelOrangeCtheme.svg');
     }
 
+    /** Sets icon for standard themes. */
     private setPlayerIcon(PLAYER_ICON: HTMLElement) {
         const PLAYER_ICON_BG = document.getElementById('game_header_center_icon');
         if (!PLAYER_ICON_BG) return;
@@ -42,6 +50,7 @@ export class GameUi {
             : PLAYER_ICON_BG.style.backgroundColor = '#F58E39';
     }
 
+    /** Sets text content for dialog buttons based on current theme. */
     public setDialogText() {
         const REF_BTN_BACK = document.getElementById('btn-back');
         const REF_BTN_EXIT = document.getElementById('btn-exit');
@@ -60,6 +69,7 @@ export class GameUi {
         }
     }
 
+    /** Updates score display on the UI. */
     public setCurrentPoints() {
         const REF_BLUE_POINTS = document.getElementById('blueScore') as HTMLElement;
         const REF_ORANGE_POINTS = document.getElementById('orangeScore') as HTMLElement;
@@ -68,6 +78,7 @@ export class GameUi {
         REF_ORANGE_POINTS.innerHTML = this.state.pointsPlayerOrange.toString();
     }
 
+    /** Updates flip state of cards in the DOM. */
     public flippCards() {
         this.state.cards.forEach(
             card => {
@@ -87,6 +98,7 @@ export class GameUi {
             });
     }
 
+    /** Populates the final game result page. */
     public loadAttributesForFinalpage() {
         if (!this.gameLogic) return;
         this.gameLogic.getMatchWinner();
@@ -98,6 +110,7 @@ export class GameUi {
         this.setBtnAttributesforBack();
     }
 
+    /** Retrieves DOM elements for the final screen. */
     private getFinalScreenRefs() {
         const REF_WINNER_ICON = document.getElementById('final-center-img') as HTMLElement;
         const REF_WINNER_TEXT = document.getElementById('final-center-winnerheadline') as HTMLElement;
@@ -107,6 +120,7 @@ export class GameUi {
         return { REF_WINNER_ICON, REF_WINNER_TEXT, REF_FINAL_CENTER, REF_WINNER_TEXT_HEADLINE }
     }
 
+    /** Configures UI elements for the winning state. */
     private setAttributesforWinner(matchWinner: string, WINNER_ICON: HTMLElement, WINNER_TEXT: HTMLElement, WINNER_HEADLINE: HTMLElement) {
         if (matchWinner === 'pBlue') {
             WINNER_HEADLINE.innerHTML = ("The winner is")
@@ -123,6 +137,7 @@ export class GameUi {
         }
     }
 
+    /** Configures the "Back" button on the final screen. */
     public setBtnAttributesforBack() {
         const REF_BACK_BTN = document.getElementById("btn-backToStart")?.querySelector('span');
         if (!REF_BACK_BTN || !this.gameLogic) return;
@@ -134,6 +149,7 @@ export class GameUi {
         REF_BACK_BTN.addEventListener('click', () => this.game.handleBackClick())
     }
 
+    /** Attaches event listeners to the exit dialog. */
     public addEventlistnerforDialog() {
         const DIALOG = document.getElementById('exit-dialog') as HTMLDialogElement
         const OPEN_DIALOG = document.getElementById('btn-exit-dialog') as HTMLButtonElement;
@@ -150,13 +166,17 @@ export class GameUi {
         };
     }
 
+    /** Opens the provided dialog. */
     private openDialog(DIALOG: HTMLDialogElement) {
         DIALOG.showModal();
     }
 
+    /** Closes the provided dialog. */
     private closeDialog(DIALOG: HTMLDialogElement) {
         DIALOG.close();
     }
+
+    /** Closes the dialog and triggers game exit. */
     private exitGame(DIALOG: HTMLDialogElement) {
         DIALOG.close();
         this.game.handleBackClick();
