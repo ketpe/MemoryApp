@@ -96,7 +96,6 @@ export class GameUi {
         REFS.REF_FINAL_CENTER.setAttribute('data-winner', this.state.matchWinner);
         this.setAttributesforWinner(this.state.matchWinner, REFS.REF_WINNER_ICON, REFS.REF_WINNER_TEXT, REFS.REF_WINNER_TEXT_HEADLINE);
         this.setBtnAttributesforBack();
-        this.setBtnAttributesforExit();
     }
 
     private getFinalScreenRefs() {
