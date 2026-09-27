@@ -117,7 +117,7 @@
 
         margin-top: 64px;
         @extend .secondary-btn;
-        @include mx.redRose-bold(24px);
+        @include mx.font(t(game_header-fontfamily), t(game_header-left-fontweight), t(game_header-left-fontstyle), t(game_header-left-fontsize));
         color: t(final-btn-color);
         white-space: nowrap;
         background-color: t(final-btn-bg-color);
@@ -150,5 +150,19 @@
 @include mx.widescreen() {
     body:has(#main-container.main-container-final) {
         background-color: t(go-bg-color);
+    }
+
+    .main-container-final {
+        position: unset;
+    }
+
+    .final-header {
+        background-image: t(final-header-bg-img-wide);
+        width: 3216px;
+        height: 320px;
+        position: absolute;
+        margin: 0 auto;
+        inset: 0;
+
     }
 }

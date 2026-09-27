@@ -46,20 +46,6 @@
     grid-template-columns: repeat(var($size), 120px);
 }
 
-@mixin redRose-bold($size) {
-    font-family: Red Rose;
-    font-weight: 700;
-    font-style: Bold;
-    font-size: $size;
-}
-
-@mixin redRose-regular($size) {
-    font-family: Red Rose;
-    font-weight: 400;
-    font-style: regular;
-    font-size: $size;
-}
-
 @mixin font($family, $weight, $style, $size) {
     font-family: $family;
     font-weight: $weight;
