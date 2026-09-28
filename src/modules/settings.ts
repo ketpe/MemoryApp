@@ -96,7 +96,7 @@ function adjustTheme(v: string, L?: string) {
     const TXT = document.getElementById('preview-theme');
     const IMG = document.getElementById('setting_preview-Picture-img') as HTMLImageElement;
     if (TXT) TXT.innerHTML = L ?? '';
-    if (IMG) IMG.src = `../assets/preview-${v}.png`;
+    if (IMG) IMG.src = `./assets/preview-${v}.png`;
 }
 
 /**

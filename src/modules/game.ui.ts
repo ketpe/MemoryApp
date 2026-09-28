@@ -36,15 +36,15 @@ export class GameUi {
     /** Sets icon for C-Theme. */
     private setCthemePlayerIcon(PLAYER_ICON: HTMLElement) {
         this.state.currentPlayer === 'pBlue'
-            ? PLAYER_ICON.setAttribute('src', '../public/assets/labelBlueCtheme.svg')
-            : PLAYER_ICON.setAttribute('src', '../public/assets/labelOrangeCtheme.svg');
+            ? PLAYER_ICON.setAttribute('src', './assets/labelBlueCtheme.svg')
+            : PLAYER_ICON.setAttribute('src', './assets/labelOrangeCtheme.svg');
     }
 
     /** Sets icon for standard themes. */
     private setPlayerIcon(PLAYER_ICON: HTMLElement) {
         const PLAYER_ICON_BG = document.getElementById('game_header_center_icon');
         if (!PLAYER_ICON_BG) return;
-        PLAYER_ICON.setAttribute('src', '../public/assets/chess_pawnWhite.svg');
+        PLAYER_ICON.setAttribute('src', './assets/chess_pawnWhite.svg');
         this.state.currentPlayer === 'pBlue'
             ? PLAYER_ICON_BG.style.backgroundColor = '#1FAAFC'
             : PLAYER_ICON_BG.style.backgroundColor = '#F58E39';
