@@ -17,7 +17,7 @@
 }
 
 .game_header {
-    @include mx.flex-spaceBetween;
+    @include mx.flex-spaceAround;
     background-color: t(bg-game_header-color);
     border-radius: 10px;
     width: 100%;
