@@ -13,7 +13,7 @@ function init(): void {
 };
 
 /** Renders the start page */
-export function loadStartPage() {
+function loadStartPage() {
   render(startpage, "main-container-startPage");
 
   const START_BTN = document.getElementById("hero-btn");
@@ -21,7 +21,7 @@ export function loadStartPage() {
 }
 
 /** Renders the settings page and initializes settings */
-function loadSettings(): void {
+export function loadSettings(): void {
   render(settingsPage, "main-container-settingsPage");
   initSettings();
 

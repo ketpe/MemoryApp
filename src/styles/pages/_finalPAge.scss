@@ -14,6 +14,19 @@
     @include mx.flex-start-center(column);
     font-family: t(game_header-fontfamily);
     position: relative;
+    animation: slideInFromTop 0.8s ease-out forwards;
+}
+
+@keyframes slideInFromTop {
+    from {
+        transform: translateY(-100vh);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .final-header {
