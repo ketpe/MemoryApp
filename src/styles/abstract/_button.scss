@@ -203,11 +203,11 @@
         @include mx.font(t(game_header-fontfamily), t(game_header-right-fontweight), t(game_header-right-fontstyle), t(game_header-right-fontsize));
 
         &::before {
-            filter: t(secBtn-url-filter);
+
             content: "";
             width: 30px;
             height: 30px;
-            @include mx.bg-image(t(secBtn-url-theme), t(secBtn-bgi-width), t(secBtn-bgi-height));
+            @include mx.bg-image(t(secBtn-url-theme), t(secBtn-bgi-width), t(secBtn-bgi-height), t(secBtn-url-filter));
             padding: 3.75px 3.75px 3.75px 3.75px;
         }
 
