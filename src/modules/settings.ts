@@ -70,6 +70,26 @@ export function initSettings(): void {
             processInput(T.name, T.value, L?.innerHTML);
         }
     });
+    document.addEventListener("pointerover", (e: PointerEvent) => {
+        const THEME = getThemeFromLabel(e.target);
+        if (THEME) updateThemePreviewImage(THEME);
+    });
+    document.addEventListener("pointerout", (e: PointerEvent) => {
+        const LABEL = getThemeLabel(e.target);
+        if (!LABEL || (e.relatedTarget instanceof Node && LABEL.contains(e.relatedTarget))) return;
+        updateThemePreviewImage(globalSettings.theme.selectedTheme);
+    });
+}
+
+function getThemeLabel(target: EventTarget | null): HTMLLabelElement | null {
+    if (!(target instanceof Element)) return null;
+    return target.closest<HTMLLabelElement>('#themeForm label[for]');
+}
+
+function getThemeFromLabel(target: EventTarget | null): string | null {
+    const LABEL = getThemeLabel(target);
+    const INPUT = LABEL ? document.getElementById(LABEL.htmlFor) as HTMLInputElement | null : null;
+    return INPUT?.name === 'selectedTheme' ? INPUT.value : null;
 }
 
 /**
@@ -94,9 +114,14 @@ function processInput(name: string, value: string, L?: string): void {
  */
 function adjustTheme(v: string, L?: string) {
     const TXT = document.getElementById('preview-theme');
-    const IMG = document.getElementById('setting_preview-Picture-img') as HTMLImageElement;
     if (TXT) TXT.innerHTML = L ?? '';
-    if (IMG) IMG.src = `./assets/preview-${v}.png`;
+    updateThemePreviewImage(v);
+}
+
+function updateThemePreviewImage(theme: string | null) {
+    if (!theme) return;
+    const IMG = document.getElementById('setting_preview-Picture-img') as HTMLImageElement | null;
+    if (IMG) IMG.src = `./assets/preview-${theme}.png`;
 }
 
 /**
