@@ -167,15 +167,19 @@
 
     .main-container-final {
         position: unset;
+        // overflow: hidden;
     }
 
     .final-header {
         background-image: t(final-header-bg-img-wide);
-        width: 3216px;
-        height: 320px;
+        width: min(100vw, 3216px);
+        height: auto;
+        aspect-ratio: 3216 / 320;
+        background-size: auto 100%;
         position: absolute;
-        margin: 0 auto;
-        inset: 0;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
 
     }
 }
